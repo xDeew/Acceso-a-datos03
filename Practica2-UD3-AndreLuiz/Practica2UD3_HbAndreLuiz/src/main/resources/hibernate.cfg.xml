@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+        <property name="connection.url">jdbc:mysql://localhost:3306/gimnasio</property>
+        <property name="connection.driver_class">com.mysql.cj.jdbc.Driver</property>
+        <property name="connection.username">root</property>
+        <mapping class="com.andrelut.gimnasio.Clase"/>
+        <mapping class="com.andrelut.gimnasio.InscripcionCliente"/>
+        <mapping class="com.andrelut.gimnasio.SesionEntrenamiento"/>
+        <mapping class="com.andrelut.gimnasio.ClienteEquipamiento"/>
+        <mapping class="com.andrelut.gimnasio.Cliente"/>
+        <mapping class="com.andrelut.gimnasio.EntrenadorEquipamiento"/>
+        <mapping class="com.andrelut.gimnasio.Entrenador"/>
+        <mapping class="com.andrelut.gimnasio.Equipamiento"/>
+        <mapping class="com.andrelut.gimnasio.Reserva"/>
+        <mapping class="com.andrelut.gimnasio.Suscripcion"/>
+
+
+        <!-- <property name="connection.username"/> -->
+        <!-- <property name="connection.password"/> -->
+
+        <!-- DB schema will be updated if needed -->
+        <!-- <property name="hibernate.hbm2ddl.auto">update</property> -->
+    </session-factory>
+</hibernate-configuration>
