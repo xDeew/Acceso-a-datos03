@@ -64,12 +64,16 @@ public class Controlador implements ActionListener, ListSelectionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         String comando = e.getActionCommand();
-
-        if (!conectado && !comando.equalsIgnoreCase("conectar")) {
-            JOptionPane.showMessageDialog(null, "No se ha conectado a la base de datos.",
-                    "Error de conexión", JOptionPane.ERROR_MESSAGE);
-            return;
+        // Verifica si hay conexión antes de proceder con cualquier comando, excepto "conectar".
+        if (!comando.equals("conectar")) {
+            conectado = modelo.estaConectado(); // Actualiza el estado de la conexión.
+            if (!conectado) {
+                JOptionPane.showMessageDialog(vista.frame, "No hay conexión a la base de datos. Por favor, conecte antes de continuar.", "Error de conexión", JOptionPane.ERROR_MESSAGE);
+                return; // Sale del método si no hay conexión.
+            }
         }
+
+
         switch (comando) {
             case "desconectar":
                 modelo.desconectar();
@@ -91,24 +95,29 @@ public class Controlador implements ActionListener, ListSelectionListener {
                 System.exit(0);
                 break;
             case "añadirCliente":
+                System.out.println("Añadir cliente");
 
                 break;
             case "modificarCliente":
+                System.out.println("Modificar cliente");
 
                 break;
             case "eliminarCliente":
+                System.out.println("Eliminar cliente");
 
                 break;
 
-
             case "añadirSuscripcion":
+                System.out.println("Añadir suscripción");
 
                 break;
             case "modificarSuscripcion":
+                System.out.println("Modificar suscripción");
 
 
                 break;
             case "eliminarSuscripcion":
+                System.out.println("Eliminar suscripción");
 
 
                 break;
@@ -160,7 +169,9 @@ public class Controlador implements ActionListener, ListSelectionListener {
 
         }
 
-        actualizar();
+        if (conectado) {
+            actualizar(); // Llama a actualizar solo si está conectado.
+        }
     }
 
     private void actualizar() {

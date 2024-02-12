@@ -21,8 +21,9 @@ public class Clase {
     @Column(name = "tipo")
     private String tipo;
     @ManyToOne
-    @JoinColumn(name = "id", referencedColumnName = "id_clase", nullable = false)
+    @JoinColumn(name = "id_equipamiento", referencedColumnName = "id", nullable = false)
     private Equipamiento equipamientos;
+
     @ManyToMany(mappedBy = "clases")
     private List<Cliente> clientes;
     @ManyToMany

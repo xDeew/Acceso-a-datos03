@@ -7,6 +7,7 @@ import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class Modelo {
@@ -32,8 +33,8 @@ public class Modelo {
         conf.addAnnotatedClass(Reserva.class);
         conf.addAnnotatedClass(ClienteEquipamiento.class);
         conf.addAnnotatedClass(EntrenadorEquipamiento.class);
-        conf.addAnnotatedClass(InscripcionCliente.class);
-        conf.addAnnotatedClass(SesionEntrenamiento.class);
+        conf.addAnnotatedClass(ClienteClase.class);
+        conf.addAnnotatedClass(ClienteEntrenador.class);
 
         StandardServiceRegistry ssr = new StandardServiceRegistryBuilder().applySettings(
                 conf.getProperties()).build();
@@ -41,6 +42,9 @@ public class Modelo {
         sessionFactory = conf.buildSessionFactory(ssr);
 
     }
+
+
+
 
     public Session abrirSesion() {
         return sessionFactory.openSession();
@@ -102,9 +106,9 @@ public class Modelo {
         return entrenadorEquipamientos;
     }
 
-    ArrayList<InscripcionCliente> getInscripcionCliente() {
+    ArrayList<ClienteClase> getInscripcionCliente() {
         Session session = abrirSesion();
-        ArrayList<InscripcionCliente> inscripcionClientes = (ArrayList<InscripcionCliente>) session.createQuery("from InscripcionCliente").list();
+        ArrayList<ClienteClase> inscripcionClientes = (ArrayList<ClienteClase>) session.createQuery("from InscripcionCliente").list();
         session.close();
         return inscripcionClientes;
     }

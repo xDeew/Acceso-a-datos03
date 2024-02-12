@@ -28,8 +28,6 @@ public class Equipamiento {
     @ManyToMany(mappedBy = "equipamientos")
     private List<Cliente> clientes;
 
-
-
     public int getId() {
         return id;
     }
@@ -98,6 +96,4 @@ public class Equipamiento {
     public void setClientes(List<Cliente> clientes) {
         this.clientes = clientes;
     }
-
-
 }
