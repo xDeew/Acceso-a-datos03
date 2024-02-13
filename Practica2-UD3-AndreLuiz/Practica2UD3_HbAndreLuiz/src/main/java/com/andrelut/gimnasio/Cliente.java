@@ -121,4 +121,9 @@ public class Cliente {
     public void setEquipamientos(List<Equipamiento> equipamientos) {
         this.equipamientos = equipamientos;
     }
+
+    @Override
+    public String toString() {
+        return "Nombre " + this.nombre + " | " + "Direccion " + this.direccion + " | " + "Teléfono " + this.telefono + " | " + "Email " + this.email;
+    }
 }

@@ -7,7 +7,6 @@ import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class Modelo {
@@ -42,8 +41,6 @@ public class Modelo {
         sessionFactory = conf.buildSessionFactory(ssr);
 
     }
-
-
 
 
     public Session abrirSesion() {
@@ -115,5 +112,41 @@ public class Modelo {
 
     public boolean estaConectado() {
         return sessionFactory != null && sessionFactory.isOpen();
+    }
+
+    public void añadirCliente(Cliente cliente) {
+        Session session = abrirSesion();
+        session.beginTransaction();
+        session.save(cliente);
+        session.getTransaction().commit();
+        session.close();
+    }
+
+    public void modificarCliente(Cliente clienteModificado) {
+        Session session = abrirSesion();
+        session.beginTransaction();
+        session.saveOrUpdate(clienteModificado);
+        session.getTransaction().commit();
+        session.close();
+    }
+
+    public boolean existeEmail(String email) {
+        Session session = abrirSesion();
+        Long count = (Long) session.createQuery("select count(*) from Cliente where email = :email")
+                .setParameter("email", email)
+                .uniqueResult();
+        session.close();
+        return count > 0;
+    }
+
+    public void eliminarCliente(Cliente clienteAEliminar) {
+        Session session = abrirSesion();
+        session.beginTransaction();
+        session.delete(clienteAEliminar);
+        session.getTransaction().commit();
+        session.close();
+    }
+
+    public void añadirSuscripcion(Suscripcion suscripcion) {
     }
 }

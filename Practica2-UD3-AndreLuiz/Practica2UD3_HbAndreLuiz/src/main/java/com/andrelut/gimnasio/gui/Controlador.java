@@ -1,6 +1,7 @@
 package com.andrelut.gimnasio.gui;
 
 import com.andrelut.gimnasio.Cliente;
+import com.andrelut.gimnasio.Suscripcion;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -24,15 +25,6 @@ public class Controlador implements ActionListener, ListSelectionListener {
         addListSelectionListener(this);
     }
 
-    private void addListSelectionListener(ListSelectionListener listener) {
-        vista.listClase.getSelectionModel().addListSelectionListener(listener);
-        vista.listClientes.getSelectionModel().addListSelectionListener(listener);
-        vista.listEntrenadores.getSelectionModel().addListSelectionListener(listener);
-        vista.listEquipamiento.getSelectionModel().addListSelectionListener(listener);
-        vista.listReservas.getSelectionModel().addListSelectionListener(listener);
-        vista.listSuscripciones.getSelectionModel().addListSelectionListener(listener);
-
-    }
 
     private void addActionListeners(ActionListener listener) {
         vista.itemConexion.addActionListener(listener);
@@ -64,12 +56,11 @@ public class Controlador implements ActionListener, ListSelectionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         String comando = e.getActionCommand();
-        // Verifica si hay conexión antes de proceder con cualquier comando, excepto "conectar".
-        if (!comando.equals("conectar")) {
-            conectado = modelo.estaConectado(); // Actualiza el estado de la conexión.
+        if (!comando.equals("conectar") && !comando.equals("salir")) {
+            conectado = modelo.estaConectado();
             if (!conectado) {
                 JOptionPane.showMessageDialog(vista.frame, "No hay conexión a la base de datos. Por favor, conecte antes de continuar.", "Error de conexión", JOptionPane.ERROR_MESSAGE);
-                return; // Sale del método si no hay conexión.
+                return;
             }
         }
 
@@ -95,20 +86,46 @@ public class Controlador implements ActionListener, ListSelectionListener {
                 System.exit(0);
                 break;
             case "añadirCliente":
-                System.out.println("Añadir cliente");
+                Cliente cliente = new Cliente();
+                cliente.setNombre(vista.txtNombreCliente.getText());
+                cliente.setDireccion(vista.txtDireccion.getText());
+                cliente.setTelefono(vista.txtTelefono.getText());
+                cliente.setEmail(vista.txtEmail.getText());
+                if (modelo.existeEmail(cliente.getEmail())) {
+                    JOptionPane.showMessageDialog(vista.frame, "El email ya existe. Por favor, introduce un email diferente.", "Error", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    modelo.añadirCliente(cliente);
+                    actualizarComboClientesRegistrados();
 
+                }
                 break;
             case "modificarCliente":
-                System.out.println("Modificar cliente");
+                Cliente clienteModificado = (Cliente) vista.listClientes.getSelectedValue();
+                clienteModificado.setNombre(vista.txtNombreCliente.getText());
+                clienteModificado.setDireccion(vista.txtDireccion.getText());
+                clienteModificado.setTelefono(vista.txtTelefono.getText());
+                clienteModificado.setEmail(vista.txtEmail.getText());
+                modelo.modificarCliente(clienteModificado);
 
                 break;
             case "eliminarCliente":
-                System.out.println("Eliminar cliente");
+                Cliente clienteAEliminar = (Cliente) vista.listClientes.getSelectedValue();
+                if (!comprobarClienteSuscripcion(clienteAEliminar)) {
+                    modelo.eliminarCliente(clienteAEliminar);
+                } else {
+                    JOptionPane.showMessageDialog(vista.frame, "No se puede eliminar el cliente porque tiene una suscripción activa.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
 
                 break;
 
             case "añadirSuscripcion":
-                System.out.println("Añadir suscripción");
+                Suscripcion suscripcion = new Suscripcion();
+
+                suscripcion.setCliente((Cliente) vista.comboClientesRegistrados.getSelectedItem());
+                suscripcion.setTipo(vista.comboTipoSuscripcion.getSelectedItem().toString());
+                suscripcion.setDuracion(Integer.parseInt(vista.txtDuracion.getText()));
+                suscripcion.setCosto(Double.parseDouble(vista.txtPrecio.getText()));
+                modelo.añadirSuscripcion(suscripcion);
 
                 break;
             case "modificarSuscripcion":
@@ -168,10 +185,40 @@ public class Controlador implements ActionListener, ListSelectionListener {
 
 
         }
+        limpiarCampos();
+        actualizar();
 
-        if (conectado) {
-            actualizar(); // Llama a actualizar solo si está conectado.
+    }
+
+    private void actualizarComboClientesRegistrados() {
+        vista.comboClientesRegistrados.removeAllItems();
+        ArrayList<Cliente> clientes = modelo.getClientes();
+        for (Cliente cliente : clientes) {
+            vista.comboClientesRegistrados.addItem(cliente);
         }
+    }
+
+    private void limpiarCampos() {
+        limpiarCamposCliente();
+    }
+
+    private void limpiarCamposCliente() {
+        vista.txtNombreCliente.setText("");
+        vista.txtDireccion.setText("");
+        vista.txtTelefono.setText("");
+        vista.txtEmail.setText("");
+    }
+
+
+    private boolean comprobarClienteSuscripcion(Cliente clienteAEliminar) {
+        for (Cliente cliente : modelo.getClientes()) {
+            if (cliente.getSuscripcion() != null) {
+                if (cliente.getSuscripcion().getCliente().equals(clienteAEliminar)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     private void actualizar() {
@@ -186,9 +233,27 @@ public class Controlador implements ActionListener, ListSelectionListener {
 
     }
 
+    private void addListSelectionListener(ListSelectionListener listener) {
+        vista.listClientes.getSelectionModel().addListSelectionListener(listener);
+        vista.listClase.getSelectionModel().addListSelectionListener(listener);
+        vista.listEntrenadores.getSelectionModel().addListSelectionListener(listener);
+        vista.listEquipamiento.getSelectionModel().addListSelectionListener(listener);
+        vista.listReservas.getSelectionModel().addListSelectionListener(listener);
+        vista.listSuscripciones.getSelectionModel().addListSelectionListener(listener);
+
+    }
+
 
     @Override
     public void valueChanged(ListSelectionEvent e) {
-
+        if (!e.getValueIsAdjusting()) {
+            Cliente cliente = (Cliente) vista.listClientes.getSelectedValue();
+            if (cliente != null) {
+                vista.txtNombreCliente.setText(cliente.getNombre());
+                vista.txtDireccion.setText(cliente.getDireccion());
+                vista.txtTelefono.setText(cliente.getTelefono());
+                vista.txtEmail.setText(cliente.getEmail());
+            }
+        }
     }
 }

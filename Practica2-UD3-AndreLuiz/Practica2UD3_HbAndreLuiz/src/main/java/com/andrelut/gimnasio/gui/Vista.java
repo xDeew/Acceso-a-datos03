@@ -1,5 +1,10 @@
 package com.andrelut.gimnasio.gui;
 
+import com.andrelut.gimnasio.enums.EstadoEquipamiento;
+import com.andrelut.gimnasio.enums.TipoClase;
+import com.andrelut.gimnasio.enums.TipoEquipamiento;
+import com.andrelut.gimnasio.enums.TipoSuscripcion;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -14,13 +19,13 @@ public class Vista extends JFrame {
     public JPanel JPanelClases;
     public JPanel JPanelEntrenadores;
     public JPanel JPanelEquipamiento;
-    public JTextField txtNombre;
+    public JTextField txtNombreCliente;
     public JTextField txtEmail;
     public JTextField txtDireccion;
     public JComboBox comboClientesRegistrados;
     public JFrame frame;
     public JComboBox comboTipoSuscripcion;
-    public JTextField txtPrecio;
+    public JTextField txtDuracion;
     public JButton btnAddCliente;
     public JButton btnModificarCliente;
     public JButton btnEliminarCliente;
@@ -61,6 +66,7 @@ public class Vista extends JFrame {
     public JButton btnModificarReserva;
     public JButton btnDeleteReserva;
     public JList listReservas;
+    public JTextField txtPrecio;
     public DefaultListModel dlmClientes;
     public DefaultListModel dlmSuscripciones;
     public DefaultListModel dlmEntrenadores;
@@ -79,8 +85,11 @@ public class Vista extends JFrame {
         frame.setContentPane(panel1);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
-        frame.setSize(new Dimension(800, 430));
+        frame.setSize(new Dimension(1000, 600));
         frame.setLocationRelativeTo(null);
+
+        panel1.setLayout(new BoxLayout(panel1, BoxLayout.Y_AXIS));
+
 
         setMenu();
         setListModels();
@@ -133,7 +142,30 @@ public class Vista extends JFrame {
      * Establece los valores de los ComboBox
      */
     private void setComboBox() {
+        for (TipoSuscripcion tipo : TipoSuscripcion.values()) {
+            comboTipoSuscripcion.addItem(tipo.getNombre());
+        }
+        comboTipoSuscripcion.setSelectedIndex(-1);
 
+        for (TipoClase tipo : TipoClase.values()) {
+            comboTiposClases.addItem(tipo.getNombre());
+        }
+        comboTiposClases.setSelectedIndex(-1);
+
+        for (TipoClase tipo : TipoClase.values()) {
+            comboEspecialidadEntrenador.addItem(tipo.getNombre());
+        }
+        comboEspecialidadEntrenador.setSelectedIndex(-1);
+
+        for (TipoEquipamiento tipo : TipoEquipamiento.values()) {
+            comboEquipamiento.addItem(tipo.getDescripcion());
+        }
+        comboEquipamiento.setSelectedIndex(-1);
+
+        for (EstadoEquipamiento estado : EstadoEquipamiento.values()) {
+            comboEstadoEquipamiento.addItem(estado.getValor());
+        }
+        comboEstadoEquipamiento.setSelectedIndex(-1);
 
     }
 

@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import java.util.Objects;
 
 @Entity
+@Table(name = "suscripciones")
 public class Suscripcion {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
