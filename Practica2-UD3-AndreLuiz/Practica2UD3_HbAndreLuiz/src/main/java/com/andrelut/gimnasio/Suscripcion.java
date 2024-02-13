@@ -20,7 +20,8 @@ public class Suscripcion {
     @Basic
     @Column(name = "costo")
     private double costo;
-    @OneToOne(mappedBy = "suscripcion")
+    @OneToOne
+    @JoinColumn(name = "id_cliente", referencedColumnName = "id")
     private Cliente cliente;
 
     public int getId() {
@@ -74,5 +75,17 @@ public class Suscripcion {
 
     public void setCliente(Cliente cliente) {
         this.cliente = cliente;
+    }
+
+    @Override
+    public String toString() {
+        if (cliente != null) return String.format(
+                "Suscripcion: [ID: %d, Tipo: %s, Duración: %d, Costo: %.2f, Cliente: %s]",
+                id, tipo, duracion, costo, cliente.getNombre()
+        );
+        return String.format(
+                "Suscripcion: [ID: %d, Tipo: %s, Duración: %d, Costo: %.2f, Cliente: %s]",
+                id, tipo, duracion, costo, "N/A"
+        );
     }
 }

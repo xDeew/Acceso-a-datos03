@@ -2,7 +2,7 @@ package com.andrelut.gimnasio.enums;
 
 public enum TipoSuscripcion {
 
-    BASICA("Básica", 20.00),
+    BASICA("Basica", 20.00),
     PREMIUM("Premium", 35.00),
     FAMILIAR("Familiar", 50.00),
     ESTUDIANTE("Estudiante", 15.00);
@@ -20,6 +20,14 @@ public enum TipoSuscripcion {
         this.precio = precio;
     }
 
+    public static TipoSuscripcion getPorNombre(String nombre) {
+        for (TipoSuscripcion tipo : values()) {
+            if (tipo.getNombre().equals(nombre)) {
+                return tipo;
+            }
+        }
+        return null;
+    }
     public String getNombre() {
         return nombre;
     }

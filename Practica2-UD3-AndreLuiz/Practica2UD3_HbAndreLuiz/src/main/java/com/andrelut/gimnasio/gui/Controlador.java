@@ -1,16 +1,21 @@
 package com.andrelut.gimnasio.gui;
 
 import com.andrelut.gimnasio.Cliente;
+import com.andrelut.gimnasio.Entrenador;
 import com.andrelut.gimnasio.Suscripcion;
+import com.andrelut.gimnasio.enums.TipoSuscripcion;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.util.ArrayList;
+import java.util.Objects;
 
-public class Controlador implements ActionListener, ListSelectionListener {
+public class Controlador implements ActionListener, ListSelectionListener, ItemListener {
     private Vista vista;
     private Modelo modelo;
     private boolean conectado;
@@ -23,6 +28,19 @@ public class Controlador implements ActionListener, ListSelectionListener {
 
         addActionListeners(this);
         addListSelectionListener(this);
+        addItemListeners();
+    }
+
+    private void addItemListeners() {
+        vista.comboTipoSuscripcion.addItemListener(e -> {
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                String tipoSeleccionado = (String) e.getItem();
+                TipoSuscripcion tipo = TipoSuscripcion.getPorNombre(tipoSeleccionado);
+                if (tipo != null) {
+                    vista.txtPrecio.setText(String.valueOf(tipo.getPrecio()));
+                }
+            }
+        });
     }
 
 
@@ -80,6 +98,7 @@ public class Controlador implements ActionListener, ListSelectionListener {
                 vista.itemConexion.setText("Desconectar");
                 vista.itemConexion.setActionCommand("desconectar");
                 vista.comboClientesRegistrados.setEnabled(true);
+                actualizarComboClientesRegistrados();
 
                 break;
             case "salir":
@@ -120,21 +139,35 @@ public class Controlador implements ActionListener, ListSelectionListener {
 
             case "añadirSuscripcion":
                 Suscripcion suscripcion = new Suscripcion();
-
-                suscripcion.setCliente((Cliente) vista.comboClientesRegistrados.getSelectedItem());
-                suscripcion.setTipo(vista.comboTipoSuscripcion.getSelectedItem().toString());
-                suscripcion.setDuracion(Integer.parseInt(vista.txtDuracion.getText()));
-                suscripcion.setCosto(Double.parseDouble(vista.txtPrecio.getText()));
-                modelo.añadirSuscripcion(suscripcion);
-
+                Cliente clienteSeleccionado = (Cliente) vista.comboClientesRegistrados.getSelectedItem();
+                if (clienteSeleccionado != null && clienteSeleccionado.getId() != 0) {
+                    suscripcion.setCliente(clienteSeleccionado);
+                    String tipoSeleccionado = Objects.requireNonNull(vista.comboTipoSuscripcion.getSelectedItem()).toString();
+                    TipoSuscripcion tipo = TipoSuscripcion.getPorNombre(tipoSeleccionado);
+                    if (tipo != null) {
+                        suscripcion.setTipo(tipo.getNombre());
+                        suscripcion.setDuracion(Integer.parseInt(vista.txtDuracion.getText()));
+                        suscripcion.setCosto(tipo.getPrecio());
+                        modelo.añadirSuscripcion(suscripcion);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(vista.frame, "Por favor, selecciona un cliente.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
                 break;
+
             case "modificarSuscripcion":
-                System.out.println("Modificar suscripción");
+                int idSuscripcionSeleccionada = obtenerIdSuscripcionSeleccionada();
+                String nuevoTipo = vista.comboTipoSuscripcion.getSelectedItem().toString();
+                int nuevaDuracion = Integer.parseInt(vista.txtDuracion.getText());
+                modelo.modificarSuscripcion(idSuscripcionSeleccionada, nuevoTipo, nuevaDuracion);
 
-
+                JOptionPane.showMessageDialog(vista.frame, "Suscripción modificada con éxito.");
                 break;
+
             case "eliminarSuscripcion":
                 System.out.println("Eliminar suscripción");
+                int idSuscripcion = obtenerIdSuscripcionSeleccionada();
+                modelo.eliminarSuscripcion(idSuscripcion);
 
 
                 break;
@@ -190,6 +223,11 @@ public class Controlador implements ActionListener, ListSelectionListener {
 
     }
 
+    private int obtenerIdSuscripcionSeleccionada() {
+        Suscripcion suscripcionSeleccionada = (Suscripcion) vista.listSuscripciones.getSelectedValue();
+        return suscripcionSeleccionada.getId();
+    }
+
     private void actualizarComboClientesRegistrados() {
         vista.comboClientesRegistrados.removeAllItems();
         ArrayList<Cliente> clientes = modelo.getClientes();
@@ -223,6 +261,22 @@ public class Controlador implements ActionListener, ListSelectionListener {
 
     private void actualizar() {
         listarClientes(modelo.getClientes());
+        listarSuscripciones(modelo.getSuscripciones());
+        listarEntrenadores(modelo.getEntrenadores());
+    }
+
+    private void listarSuscripciones(ArrayList<Suscripcion> suscripciones) {
+        vista.dlmSuscripciones.clear();
+        for (Suscripcion suscripcion : suscripciones) {
+            vista.dlmSuscripciones.addElement(suscripcion);
+        }
+    }
+
+    private void listarEntrenadores(ArrayList<Entrenador> entrenadores) {
+        vista.dlmEntrenadores.clear();
+        for (Entrenador entrenador : entrenadores) {
+            vista.dlmEntrenadores.addElement(entrenador);
+        }
     }
 
     private void listarClientes(ArrayList<Cliente> clientes) {
@@ -254,6 +308,18 @@ public class Controlador implements ActionListener, ListSelectionListener {
                 vista.txtTelefono.setText(cliente.getTelefono());
                 vista.txtEmail.setText(cliente.getEmail());
             }
+            Suscripcion suscripcion = (Suscripcion) vista.listSuscripciones.getSelectedValue();
+            if (suscripcion != null) {
+                vista.comboTipoSuscripcion.setSelectedItem(suscripcion.getTipo());
+                vista.txtDuracion.setText(String.valueOf(suscripcion.getDuracion()));
+                vista.txtPrecio.setText(String.valueOf(suscripcion.getCosto()));
+                vista.comboClientesRegistrados.setSelectedItem(suscripcion.getCliente());
+            }
         }
+    }
+
+    @Override
+    public void itemStateChanged(ItemEvent e) {
+
     }
 }

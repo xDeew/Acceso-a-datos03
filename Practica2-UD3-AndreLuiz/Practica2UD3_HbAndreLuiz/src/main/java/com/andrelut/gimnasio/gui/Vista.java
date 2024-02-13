@@ -89,6 +89,7 @@ public class Vista extends JFrame {
         frame.setLocationRelativeTo(null);
 
         panel1.setLayout(new BoxLayout(panel1, BoxLayout.Y_AXIS));
+        txtPrecio.setEditable(false);
 
 
         setMenu();

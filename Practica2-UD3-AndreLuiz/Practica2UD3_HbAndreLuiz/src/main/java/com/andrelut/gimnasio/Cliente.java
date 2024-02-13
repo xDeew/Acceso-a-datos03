@@ -24,8 +24,7 @@ public class Cliente {
     @Basic
     @Column(name = "email")
     private String email;
-    @OneToOne
-    @JoinColumn(name = "id", referencedColumnName = "id_cliente", nullable = false)
+    @OneToOne(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private Suscripcion suscripcion;
     @ManyToMany
     @JoinTable(name = "cliente_entrenador", catalog = "", schema = "gimnasio", joinColumns = @JoinColumn(name = "id_entrenador", referencedColumnName = "id", nullable = false), inverseJoinColumns = {})
@@ -124,6 +123,9 @@ public class Cliente {
 
     @Override
     public String toString() {
-        return "Nombre " + this.nombre + " | " + "Direccion " + this.direccion + " | " + "Teléfono " + this.telefono + " | " + "Email " + this.email;
+        return String.format(
+                "Cliente: [Nombre: %s, Dirección: %s, Teléfono: %s, Email: %s]",
+                nombre, direccion, telefono, email
+        );
     }
 }

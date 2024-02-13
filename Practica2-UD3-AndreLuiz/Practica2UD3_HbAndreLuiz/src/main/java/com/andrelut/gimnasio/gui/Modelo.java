@@ -1,8 +1,10 @@
 package com.andrelut.gimnasio.gui;
 
 import com.andrelut.gimnasio.*;
+import com.andrelut.gimnasio.enums.TipoSuscripcion;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
@@ -142,11 +144,66 @@ public class Modelo {
     public void eliminarCliente(Cliente clienteAEliminar) {
         Session session = abrirSesion();
         session.beginTransaction();
+        Suscripcion suscripcion = clienteAEliminar.getSuscripcion();
+        if (suscripcion != null) {
+            suscripcion.setCliente(null);
+            session.delete(suscripcion);
+        }
         session.delete(clienteAEliminar);
         session.getTransaction().commit();
         session.close();
     }
 
     public void añadirSuscripcion(Suscripcion suscripcion) {
+        Session session = abrirSesion();
+        session.beginTransaction();
+        session.save(suscripcion);
+        session.getTransaction().commit();
+        session.close();
+    }
+
+    public void modificarSuscripcion(int idSuscripcion, String nuevoTipo, int nuevaDuracion) {
+        Session session = sessionFactory.openSession();
+        Transaction tx = null;
+        try {
+            tx = session.beginTransaction();
+            Suscripcion suscripcion = session.get(Suscripcion.class, idSuscripcion);
+            if (suscripcion != null) {
+                suscripcion.setTipo(nuevoTipo);
+                suscripcion.setDuracion(nuevaDuracion);
+                TipoSuscripcion tipo = TipoSuscripcion.getPorNombre(nuevoTipo);
+                if (tipo != null) {
+                    suscripcion.setCosto(tipo.getPrecio());
+                }
+
+                session.update(suscripcion);
+                tx.commit();
+            } else {
+                System.out.println("La suscripción con el ID proporcionado no existe.");
+            }
+        } catch (Exception e) {
+            if (tx != null) tx.rollback();
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+    }
+
+    public void eliminarSuscripcion(int idSuscripcion) {
+        Session session = abrirSesion();
+        session.beginTransaction();
+        Suscripcion suscripcion = session.get(Suscripcion.class, idSuscripcion);
+        if (suscripcion != null) {
+            Cliente cliente = suscripcion.getCliente();
+            if (cliente != null) {
+                cliente.setSuscripcion(null);
+                session.delete(cliente);
+            }
+            session.delete(suscripcion);
+            session.getTransaction().commit();
+        } else {
+            System.out.println("La suscripción con el ID proporcionado no existe.");
+        }
+        session.close();
     }
 }
