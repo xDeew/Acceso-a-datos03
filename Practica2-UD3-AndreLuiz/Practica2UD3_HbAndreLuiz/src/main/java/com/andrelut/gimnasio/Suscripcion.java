@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "suscripciones")
+@Table(name = "suscripciones", schema = "gimnasiodb", catalog = "")
 public class Suscripcion {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -20,8 +20,8 @@ public class Suscripcion {
     @Basic
     @Column(name = "costo")
     private double costo;
-    @OneToOne
-    @JoinColumn(name = "id_cliente", referencedColumnName = "id")
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_cliente", nullable = false)
     private Cliente cliente;
 
     public int getId() {
@@ -79,13 +79,9 @@ public class Suscripcion {
 
     @Override
     public String toString() {
-        if (cliente != null) return String.format(
-                "Suscripcion: [ID: %d, Tipo: %s, Duración: %d, Costo: %.2f, Cliente: %s]",
-                id, tipo, duracion, costo, cliente.getNombre()
-        );
         return String.format(
-                "Suscripcion: [ID: %d, Tipo: %s, Duración: %d, Costo: %.2f, Cliente: %s]",
-                id, tipo, duracion, costo, "N/A"
+                "Suscripcion { id=%d, tipo='%s', duracion=%d, costo=%f}",
+                id, tipo, duracion, costo
         );
     }
 }

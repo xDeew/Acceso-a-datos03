@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = "entrenadores")
+@Table(name = "entrenadores", schema = "gimnasiodb", catalog = "")
 public class Entrenador {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -21,13 +21,8 @@ public class Entrenador {
     @Basic
     @Column(name = "horario")
     private String horario;
-    @ManyToMany(mappedBy = "entrenadores")
-    private List<Cliente> clientes;
     @ManyToMany
-    @JoinTable(name = "entrenador_equipamiento", catalog = "", schema = "gimnasio", joinColumns = @JoinColumn(name = "id_equipamiento", referencedColumnName = "id", nullable = false), inverseJoinColumns = @JoinColumn(name = "id_entrenador", referencedColumnName = "id", nullable = false))
-    private List<Equipamiento> equipamientos;
-    @ManyToMany
-    @JoinTable(name = "entrenador_clase", catalog = "", schema = "gimnasio", joinColumns = @JoinColumn(name = "id_clase", referencedColumnName = "id", nullable = false), inverseJoinColumns = @JoinColumn(name = "id_entrenador", referencedColumnName = "id", nullable = false))
+    @JoinTable(name = "entrenador_clase", catalog = "", schema = "gimnasiodb", joinColumns = @JoinColumn(name = "id_entrenador", referencedColumnName = "id", nullable = false), inverseJoinColumns = @JoinColumn(name = "id_clase", referencedColumnName = "id", nullable = false))
     private List<Clase> clases;
 
     public int getId() {
@@ -75,22 +70,6 @@ public class Entrenador {
         return Objects.hash(id, nombre, especialidad, horario);
     }
 
-    public List<Cliente> getClientes() {
-        return clientes;
-    }
-
-    public void setClientes(List<Cliente> clientes) {
-        this.clientes = clientes;
-    }
-
-    public List<Equipamiento> getEquipamientos() {
-        return equipamientos;
-    }
-
-    public void setEquipamientos(List<Equipamiento> equipamientos) {
-        this.equipamientos = equipamientos;
-    }
-
     public List<Clase> getClases() {
         return clases;
     }
@@ -102,7 +81,8 @@ public class Entrenador {
     @Override
     public String toString() {
         return String.format(
-                "Entrenador{id=%d, nombre='%s', especialidad='%s', horario='%s'}",
-                id, nombre, especialidad, horario);
+                "Entrenador { id=%d, nombre='%s', especialidad='%s', horario='%s'}",
+                id, nombre, especialidad, horario
+        );
     }
 }

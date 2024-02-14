@@ -2,12 +2,12 @@ package com.andrelut.gimnasio;
 
 import jakarta.persistence.*;
 
-import java.sql.Timestamp;
+import java.sql.Date;
 import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = "reservas")
+@Table(name = "reservas", schema = "gimnasiodb", catalog = "")
 public class Reserva {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -15,7 +15,7 @@ public class Reserva {
     private int id;
     @Basic
     @Column(name = "fecha")
-    private Timestamp fecha;
+    private Date fecha;
     @ManyToMany(mappedBy = "reservas")
     private List<Clase> clases;
 
@@ -27,11 +27,11 @@ public class Reserva {
         this.id = id;
     }
 
-    public Timestamp getFecha() {
+    public Date getFecha() {
         return fecha;
     }
 
-    public void setFecha(Timestamp fecha) {
+    public void setFecha(Date fecha) {
         this.fecha = fecha;
     }
 
@@ -54,5 +54,13 @@ public class Reserva {
 
     public void setClases(List<Clase> clases) {
         this.clases = clases;
+    }
+
+    @Override
+    public String toString() {
+        return String.format(
+                "Reserva { id=%d, fecha='%s'}",
+                id, fecha
+        );
     }
 }

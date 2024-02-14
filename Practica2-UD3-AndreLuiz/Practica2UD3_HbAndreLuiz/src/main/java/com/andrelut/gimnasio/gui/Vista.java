@@ -1,8 +1,6 @@
 package com.andrelut.gimnasio.gui;
 
-import com.andrelut.gimnasio.enums.EstadoEquipamiento;
 import com.andrelut.gimnasio.enums.TipoClase;
-import com.andrelut.gimnasio.enums.TipoEquipamiento;
 import com.andrelut.gimnasio.enums.TipoSuscripcion;
 
 import javax.swing.*;
@@ -18,7 +16,6 @@ public class Vista extends JFrame {
     public JPanel JPanelSuscripciones;
     public JPanel JPanelClases;
     public JPanel JPanelEntrenadores;
-    public JPanel JPanelEquipamiento;
     public JTextField txtNombreCliente;
     public JTextField txtEmail;
     public JTextField txtDireccion;
@@ -35,7 +32,6 @@ public class Vista extends JFrame {
     public JButton btnDeleteSuscripciones;
     public JMenuItem itemConexion;
     public JMenuItem itemSalir;
-    public JTextField txtHorarioClase;
     public JComboBox comboEntrenadorClase;
     public JTextField txtNombreEntrenador;
     public JTextField txtHorario;
@@ -46,17 +42,10 @@ public class Vista extends JFrame {
     public JButton btnAddClase;
     public JButton btnModificarClase;
     public JButton btnDeleteClase;
-    public JComboBox comboEquipamiento;
-    public JTextField txtCostoEquipamiento;
-    public JComboBox comboEstadoEquipamiento;
-    public JButton btnAddEquipamiento;
-    public JButton btnEliminarEquipamiento;
-    public JButton btnModificarEquipamiento;
 
     public JList listClientes;
     public JList listSuscripciones;
     public JList listEntrenadores;
-    public JList listEquipamiento;
     public JComboBox comboTiposClases;
     public JTextField txtNombreClase;
     public JList listClase;
@@ -67,12 +56,10 @@ public class Vista extends JFrame {
     public JButton btnDeleteReserva;
     public JList listReservas;
     public JTextField txtPrecio;
-    public JTextField txtTipoEquipamientoClase;
     public JComboBox comboEntrenadoresElegir;
     public DefaultListModel dlmClientes;
     public DefaultListModel dlmSuscripciones;
     public DefaultListModel dlmEntrenadores;
-    public DefaultListModel dlmEquipamiento;
     public DefaultListModel dlmClases;
     public DefaultListModel dlmReservas;
 
@@ -92,7 +79,6 @@ public class Vista extends JFrame {
 
         panel1.setLayout(new BoxLayout(panel1, BoxLayout.Y_AXIS));
         txtPrecio.setEditable(false);
-        txtTipoEquipamientoClase.setEditable(false);
 
 
         setMenu();
@@ -111,9 +97,6 @@ public class Vista extends JFrame {
 
         dlmEntrenadores = new DefaultListModel();
         listEntrenadores.setModel(dlmEntrenadores);
-
-        dlmEquipamiento = new DefaultListModel();
-        listEquipamiento.setModel(dlmEquipamiento);
 
         dlmClases = new DefaultListModel();
         listClase.setModel(dlmClases);
@@ -161,14 +144,8 @@ public class Vista extends JFrame {
         }
         comboEspecialidadEntrenador.setSelectedIndex(-1);
 
-        for (TipoEquipamiento tipo : TipoEquipamiento.values()) {
-            comboEquipamiento.addItem(tipo);
-        }
 
-        for (EstadoEquipamiento estado : EstadoEquipamiento.values()) {
-            comboEstadoEquipamiento.addItem(estado.getValor());
-        }
-        comboEstadoEquipamiento.setSelectedIndex(-1);
+
 
     }
 

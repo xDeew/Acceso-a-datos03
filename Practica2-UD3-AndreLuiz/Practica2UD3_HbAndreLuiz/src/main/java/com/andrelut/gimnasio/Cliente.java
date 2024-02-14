@@ -2,11 +2,10 @@ package com.andrelut.gimnasio;
 
 import jakarta.persistence.*;
 
-import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = "clientes")
+@Table(name = "clientes", schema = "gimnasiodb", catalog = "")
 public class Cliente {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -24,17 +23,8 @@ public class Cliente {
     @Basic
     @Column(name = "email")
     private String email;
-    @OneToOne(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "cliente", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
     private Suscripcion suscripcion;
-    @ManyToMany
-    @JoinTable(name = "cliente_entrenador", catalog = "", schema = "gimnasio", joinColumns = @JoinColumn(name = "id_entrenador", referencedColumnName = "id", nullable = false), inverseJoinColumns = {})
-    private List<Entrenador> entrenadores;
-    @ManyToMany
-    @JoinTable(name = "cliente_clase", catalog = "", schema = "gimnasio", joinColumns = @JoinColumn(name = "id_clase", referencedColumnName = "id", nullable = false), inverseJoinColumns = @JoinColumn(name = "id_cliente", referencedColumnName = "id", nullable = false))
-    private List<Clase> clases;
-    @ManyToMany
-    @JoinTable(name = "cliente_equipamiento", catalog = "", schema = "gimnasio", joinColumns = @JoinColumn(name = "id_equipamiento", referencedColumnName = "id", nullable = false), inverseJoinColumns = @JoinColumn(name = "id_cliente", referencedColumnName = "id", nullable = false))
-    private List<Equipamiento> equipamientos;
 
     public int getId() {
         return id;
@@ -97,35 +87,11 @@ public class Cliente {
         this.suscripcion = suscripcion;
     }
 
-    public List<Entrenador> getEntrenadores() {
-        return entrenadores;
-    }
-
-    public void setEntrenadores(List<Entrenador> entrenadores) {
-        this.entrenadores = entrenadores;
-    }
-
-    public List<Clase> getClases() {
-        return clases;
-    }
-
-    public void setClases(List<Clase> clases) {
-        this.clases = clases;
-    }
-
-    public List<Equipamiento> getEquipamientos() {
-        return equipamientos;
-    }
-
-    public void setEquipamientos(List<Equipamiento> equipamientos) {
-        this.equipamientos = equipamientos;
-    }
-
     @Override
     public String toString() {
         return String.format(
-                "Cliente: [Nombre: %s, Dirección: %s, Teléfono: %s, Email: %s]",
-                nombre, direccion, telefono, email
+                "Cliente { id=%d, nombre='%s', direccion='%s', telefono='%s', email='%s'}",
+                id, nombre, direccion, telefono, email
         );
     }
 }

@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = "clases")
+@Table(name = "clases", schema = "gimnasiodb", catalog = "")
 public class Clase {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -16,34 +16,25 @@ public class Clase {
     @Column(name = "nombre")
     private String nombre;
     @Basic
-    @Column(name = "horario")
-    private String horario;
-    @Basic
     @Column(name = "tipo")
     private String tipo;
-
-    @Basic
-    @Column(name = "equipamiento")
-    private String equipamiento;
-
-
-    @ManyToOne
-    @JoinColumn(name = "id_entrenador", referencedColumnName = "id", nullable = false)
-    private Entrenador entrenador;
-
-
-    @ManyToOne
-    @JoinColumn(name = "id_equipamiento", referencedColumnName = "id", nullable = true)
-    private Equipamiento equipamientos;
-
-    @ManyToMany(mappedBy = "clases")
-    private List<Cliente> clientes;
-
     @ManyToMany
-    @JoinTable(name = "clase_reserva", catalog = "", schema = "gimnasio", joinColumns = @JoinColumn(name = "id_reserva", referencedColumnName = "id", nullable = false), inverseJoinColumns = @JoinColumn(name = "id_clase", referencedColumnName = "id", nullable = false))
+    @JoinTable(name = "clase_reserva", catalog = "", schema = "gimnasiodb", joinColumns = @JoinColumn(name = "id_clase", referencedColumnName = "id", nullable = false), inverseJoinColumns = @JoinColumn(name = "id_reserva", referencedColumnName = "id", nullable = false))
     private List<Reserva> reservas;
     @ManyToMany(mappedBy = "clases")
     private List<Entrenador> entrenadores;
+
+    @ManyToOne
+    @JoinColumn(name = "id_entrenador", referencedColumnName = "id")
+    private Entrenador entrenador;
+
+    public Entrenador getEntrenador() {
+        return entrenador;
+    }
+
+    public void setEntrenador(Entrenador entrenador) {
+        this.entrenador = entrenador;
+    }
 
     public int getId() {
         return id;
@@ -53,15 +44,6 @@ public class Clase {
         this.id = id;
     }
 
-    public String getEquipamiento() {
-        return equipamiento;
-    }
-
-    public void setEquipamiento(String equipamiento) {
-        this.equipamiento = equipamiento;
-    }
-
-
     public String getNombre() {
         return nombre;
     }
@@ -70,13 +52,7 @@ public class Clase {
         this.nombre = nombre;
     }
 
-    public String getHorario() {
-        return horario;
-    }
 
-    public void setHorario(String horario) {
-        this.horario = horario;
-    }
 
     public String getTipo() {
         return tipo;
@@ -91,29 +67,12 @@ public class Clase {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Clase clase = (Clase) o;
-        return id == clase.id && Objects.equals(nombre, clase.nombre) && Objects.equals(horario, clase.horario) && Objects.equals(tipo, clase.tipo);
+        return id == clase.id && Objects.equals(nombre, clase.nombre) && Objects.equals(tipo, clase.tipo);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, nombre, horario, tipo);
-    }
-
-    public Equipamiento getEquipamientos() {
-        return equipamientos;
-    }
-
-
-    public void setEquipamientos(Equipamiento equipamientos) {
-        this.equipamientos = equipamientos;
-    }
-
-    public List<Cliente> getClientes() {
-        return clientes;
-    }
-
-    public void setClientes(List<Cliente> clientes) {
-        this.clientes = clientes;
+        return Objects.hash(id, nombre, tipo);
     }
 
     public List<Reserva> getReservas() {
@@ -135,12 +94,8 @@ public class Clase {
     @Override
     public String toString() {
         return String.format(
-                "Clase{id=%d, nombre='%s', horario='%s', tipo='%s', equipamiento='%s', entrenador='%s'}",
-                id, nombre, horario, tipo, equipamiento, entrenador.getNombre());
-    }
-
-
-    public void setEntrenador(Entrenador entrenador) {
-        this.entrenador = entrenador;
+                "Clase { id=%d, nombre='%s', tipo='%s'}",
+                id, nombre, tipo
+        );
     }
 }
