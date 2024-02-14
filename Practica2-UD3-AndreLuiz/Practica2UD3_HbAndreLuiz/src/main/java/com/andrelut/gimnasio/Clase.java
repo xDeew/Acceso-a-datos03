@@ -21,12 +21,24 @@ public class Clase {
     @Basic
     @Column(name = "tipo")
     private String tipo;
+
+    @Basic
+    @Column(name = "equipamiento")
+    private String equipamiento;
+
+
     @ManyToOne
-    @JoinColumn(name = "id_equipamiento", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "id_entrenador", referencedColumnName = "id", nullable = false)
+    private Entrenador entrenador;
+
+
+    @ManyToOne
+    @JoinColumn(name = "id_equipamiento", referencedColumnName = "id", nullable = true)
     private Equipamiento equipamientos;
 
     @ManyToMany(mappedBy = "clases")
     private List<Cliente> clientes;
+
     @ManyToMany
     @JoinTable(name = "clase_reserva", catalog = "", schema = "gimnasio", joinColumns = @JoinColumn(name = "id_reserva", referencedColumnName = "id", nullable = false), inverseJoinColumns = @JoinColumn(name = "id_clase", referencedColumnName = "id", nullable = false))
     private List<Reserva> reservas;
@@ -40,6 +52,15 @@ public class Clase {
     public void setId(int id) {
         this.id = id;
     }
+
+    public String getEquipamiento() {
+        return equipamiento;
+    }
+
+    public void setEquipamiento(String equipamiento) {
+        this.equipamiento = equipamiento;
+    }
+
 
     public String getNombre() {
         return nombre;
@@ -82,6 +103,7 @@ public class Clase {
         return equipamientos;
     }
 
+
     public void setEquipamientos(Equipamiento equipamientos) {
         this.equipamientos = equipamientos;
     }
@@ -108,5 +130,17 @@ public class Clase {
 
     public void setEntrenadores(List<Entrenador> entrenadores) {
         this.entrenadores = entrenadores;
+    }
+
+    @Override
+    public String toString() {
+        return String.format(
+                "Clase{id=%d, nombre='%s', horario='%s', tipo='%s', equipamiento='%s', entrenador='%s'}",
+                id, nombre, horario, tipo, equipamiento, entrenador.getNombre());
+    }
+
+
+    public void setEntrenador(Entrenador entrenador) {
+        this.entrenador = entrenador;
     }
 }

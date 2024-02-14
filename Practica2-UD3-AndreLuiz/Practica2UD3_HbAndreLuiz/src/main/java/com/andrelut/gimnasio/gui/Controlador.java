@@ -1,8 +1,7 @@
 package com.andrelut.gimnasio.gui;
 
-import com.andrelut.gimnasio.Cliente;
-import com.andrelut.gimnasio.Entrenador;
-import com.andrelut.gimnasio.Suscripcion;
+import com.andrelut.gimnasio.*;
+import com.andrelut.gimnasio.enums.TipoClase;
 import com.andrelut.gimnasio.enums.TipoSuscripcion;
 
 import javax.swing.*;
@@ -12,13 +11,17 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class Controlador implements ActionListener, ListSelectionListener, ItemListener {
     private Vista vista;
     private Modelo modelo;
     private boolean conectado;
+
+    private Entrenador entrenadorAsignado;
 
 
     public Controlador(Modelo modelo, Vista vista) {
@@ -29,6 +32,7 @@ public class Controlador implements ActionListener, ListSelectionListener, ItemL
         addActionListeners(this);
         addListSelectionListener(this);
         addItemListeners();
+
     }
 
     private void addItemListeners() {
@@ -41,6 +45,38 @@ public class Controlador implements ActionListener, ListSelectionListener, ItemL
                 }
             }
         });
+        vista.comboTiposClases.addItemListener(e -> {
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                String tipoClaseString = vista.comboTiposClases.getSelectedItem().toString().replace(" ", "_").toUpperCase();
+                TipoClase selectedTipoClase = TipoClase.valueOf(tipoClaseString);
+
+                String equipamiento = String.valueOf(selectedTipoClase.getEquipamiento());
+                vista.txtTipoEquipamientoClase.setText(equipamiento);
+            }
+        });
+
+
+//        vista.comboTiposClases.addItemListener(e -> {
+//            if (e.getStateChange() == ItemEvent.SELECTED) {
+//                String tipoClaseString = vista.comboTiposClases.getSelectedItem().toString().replace(" ", "_").toUpperCase();
+//                TipoClase selectedTipoClase = TipoClase.valueOf(tipoClaseString);
+//
+//                entrenadorAsignado = modelo.obtenerEntrenadorPorEspecialidad(selectedTipoClase.getNombre());
+//                if (entrenadorAsignado != null) {
+//                    vista.txtEntrenadorClase.setText(entrenadorAsignado.getNombre());
+//                } else {
+//                    vista.txtEntrenadorClase.setText("No hay entrenador disponible");
+//                }
+//            }
+//        });
+
+
+    }
+
+    private Entrenador obtenerEntrenadorPorTipoClase(TipoClase selectedTipoClase) {
+        String especialidad = selectedTipoClase.name();
+        int idEntrenador = asignarIdEntrenadorPorEspecialidad(especialidad);
+        return modelo.getEntrenadorPorId(idEntrenador);
     }
 
 
@@ -82,7 +118,6 @@ public class Controlador implements ActionListener, ListSelectionListener, ItemL
             }
         }
 
-
         switch (comando) {
             case "desconectar":
                 modelo.desconectar();
@@ -93,6 +128,7 @@ public class Controlador implements ActionListener, ListSelectionListener, ItemL
 
                 break;
             case "conectar":
+
                 modelo.conectar();
                 JOptionPane.showMessageDialog(vista.frame, "Conectado a la base de datos.");
                 vista.itemConexion.setText("Desconectar");
@@ -100,11 +136,13 @@ public class Controlador implements ActionListener, ListSelectionListener, ItemL
                 vista.comboClientesRegistrados.setEnabled(true);
                 actualizarComboClientesRegistrados();
 
+
                 break;
             case "salir":
                 System.exit(0);
                 break;
             case "añadirCliente":
+
                 Cliente cliente = new Cliente();
                 cliente.setNombre(vista.txtNombreCliente.getText());
                 cliente.setDireccion(vista.txtDireccion.getText());
@@ -173,8 +211,26 @@ public class Controlador implements ActionListener, ListSelectionListener, ItemL
                 break;
 
             case "añadirClase":
+                Clase clase = new Clase();
+                clase.setNombre(vista.txtNombreClase.getText());
+                clase.setHorario(vista.txtHorarioClase.getText());
+                clase.setTipo(vista.comboTiposClases.getSelectedItem().toString());
+                clase.setEquipamiento(vista.txtTipoEquipamientoClase.getText()); // Aquí asumes un String, pero deberías considerar cómo manejas esta relación
 
+                // Busca el Entrenador por nombre o ID, según lo que tengas disponible
+                Entrenador entrenador = modelo.obtenerEntrenadorPorNombre(vista.comboEntrenadoresElegir.getSelectedItem().toString());
+                if (entrenador != null) {
+                   clase.setEntrenador(entrenador); // Asegúrate de tener este setter en Clase
+                } else {
+                    // Manejar el caso de no encontrar el entrenador
+                    JOptionPane.showMessageDialog(null, "Entrenador no encontrado.");
+                    return;
+                }
+
+                // Persiste la clase
+                modelo.añadirClase(clase);
                 break;
+
             case "modificarClase":
 
                 break;
@@ -184,6 +240,13 @@ public class Controlador implements ActionListener, ListSelectionListener, ItemL
 
 
             case "añadirEntrenador":
+                Entrenador entrenadorNuevo = new Entrenador();
+                entrenadorNuevo.setNombre(vista.txtNombreEntrenador.getText());
+                entrenadorNuevo.setEspecialidad(vista.comboEspecialidadEntrenador.getSelectedItem().toString());
+                entrenadorNuevo.setHorario(vista.txtHorario.getText());
+                modelo.añadirEntrenador(entrenadorNuevo);
+                actualizarComboEntrenadoresElegir();
+
 
 
                 break;
@@ -191,17 +254,26 @@ public class Controlador implements ActionListener, ListSelectionListener, ItemL
 
                 break;
             case "eliminarEntrenador":
+                Entrenador entrenadorAEliminar = (Entrenador) vista.listEntrenadores.getSelectedValue();
+                modelo.eliminarEntrenador(entrenadorAEliminar);
 
                 break;
 
 
             case "añadirEquipamiento":
+                Equipamiento equipamientoNuevo = new Equipamiento();
+                equipamientoNuevo.setTipoEquipamiento(vista.comboEquipamiento.getSelectedItem().toString());
+                equipamientoNuevo.setCosto(new BigDecimal(vista.txtCostoEquipamiento.getText()));
+                equipamientoNuevo.setEstado(vista.comboEstadoEquipamiento.getSelectedItem().toString());
+                modelo.añadirEquipamiento(equipamientoNuevo);
 
                 break;
             case "modificarEquipamiento":
 
                 break;
             case "eliminarEquipamiento":
+                Equipamiento equipamientoAEliminar = (Equipamiento) vista.listEquipamiento.getSelectedValue();
+                modelo.eliminarEquipamiento(equipamientoAEliminar);
 
                 break;
 
@@ -223,6 +295,33 @@ public class Controlador implements ActionListener, ListSelectionListener, ItemL
 
     }
 
+    private int asignarIdEntrenadorPorEspecialidad(String especialidad) {
+        int id = 0;
+        switch (especialidad) {
+            case "YOGA":
+                id = 1;
+                break;
+            case "PILATES":
+                id = 2;
+                break;
+            case "ZUMBA":
+                id = 3;
+                break;
+            case "CROSSFIT":
+                id = 4;
+                break;
+            case "SPINNING":
+                id = 5;
+                break;
+            case "FITNESS":
+                id = 6;
+                break;
+        }
+        return id;
+
+    }
+
+
     private int obtenerIdSuscripcionSeleccionada() {
         Suscripcion suscripcionSeleccionada = (Suscripcion) vista.listSuscripciones.getSelectedValue();
         return suscripcionSeleccionada.getId();
@@ -235,9 +334,62 @@ public class Controlador implements ActionListener, ListSelectionListener, ItemL
             vista.comboClientesRegistrados.addItem(cliente);
         }
     }
+    private void actualizarComboEntrenadoresElegir() {
+        // Limpiar el JComboBox
+        vista.comboEntrenadoresElegir.removeAllItems();
+
+        // Obtener todos los entrenadores
+        List<Entrenador> entrenadores = modelo.obtenerTodosLosEntrenadores();
+
+        // Añadir cada entrenador al JComboBox
+        for (Entrenador entrenador : entrenadores) {
+            vista.comboEntrenadoresElegir.addItem(entrenador.getNombre());
+        }
+    }
+
 
     private void limpiarCampos() {
         limpiarCamposCliente();
+        limpiarCamposSuscripciones();
+        //  limpiarCamposClase();
+        limpiarCamposEntrenador();
+        limpiarCamposEquipamiento();
+    }
+
+    private void limpiarCamposEquipamiento() {
+        vista.comboEquipamiento.setSelectedIndex(-1);
+        vista.txtCostoEquipamiento.setText("");
+        vista.comboEstadoEquipamiento.setSelectedIndex(-1);
+    }
+
+    private void limpiarCamposEntrenador() {
+        vista.txtNombreEntrenador.setText("");
+        vista.comboEspecialidadEntrenador.setSelectedIndex(-1);
+        vista.txtHorario.setText("");
+    }
+
+    private void limpiarCamposClase() {
+        if (vista.txtNombreClase != null) {
+            vista.txtNombreClase.setText("");
+        } else {
+            System.out.println("txtNombreClase es null");
+
+        }
+        vista.txtHorarioClase.setText("");
+        if (vista.comboEntrenadorClase != null) {
+            vista.comboEntrenadorClase.setSelectedIndex(-1);
+        } else {
+            System.out.println("comboEntrenadorClase es null");
+        }
+        vista.comboTiposClases.setSelectedIndex(-1);
+        vista.txtTipoEquipamientoClase.setText("");
+    }
+
+    private void limpiarCamposSuscripciones() {
+        vista.comboTipoSuscripcion.setSelectedIndex(-1);
+        vista.comboClientesRegistrados.setSelectedIndex(-1);
+        vista.txtDuracion.setText("");
+        vista.txtPrecio.setText("");
     }
 
     private void limpiarCamposCliente() {
@@ -263,6 +415,22 @@ public class Controlador implements ActionListener, ListSelectionListener, ItemL
         listarClientes(modelo.getClientes());
         listarSuscripciones(modelo.getSuscripciones());
         listarEntrenadores(modelo.getEntrenadores());
+        listarEquipamiento(modelo.getEquipamiento());
+        listarClases(modelo.getClases());
+    }
+
+    private void listarEquipamiento(ArrayList<Equipamiento> equipamiento) {
+        vista.dlmEquipamiento.clear();
+        for (Equipamiento equip : equipamiento) {
+            vista.dlmEquipamiento.addElement(equip);
+        }
+    }
+
+    private void listarClases(ArrayList<Clase> clases) {
+        vista.dlmClases.clear();
+        for (Clase clase : clases) {
+            vista.dlmClases.addElement(clase);
+        }
     }
 
     private void listarSuscripciones(ArrayList<Suscripcion> suscripciones) {

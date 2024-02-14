@@ -52,7 +52,9 @@ CREATE TABLE IF NOT EXISTS clases
     nombre VARCHAR(50) NOT NULL,
     horario VARCHAR(50) NOT NULL,
     tipo VARCHAR(50) NOT NULL,
-    id_entrenador INT UNSIGNED NOT NULL
+    id_entrenador INT UNSIGNED NOT NULL,
+    equipamiento VARCHAR(100) NOT NULL,
+	entrenadorAsignado VARCHAR(100) NOT NULL
 );
 
 -- Creación de la tabla Reservas

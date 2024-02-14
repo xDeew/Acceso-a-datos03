@@ -58,7 +58,7 @@ public class Vista extends JFrame {
     public JList listEntrenadores;
     public JList listEquipamiento;
     public JComboBox comboTiposClases;
-    public JTextField txtTipoClase;
+    public JTextField txtNombreClase;
     public JList listClase;
     public JPanel JPanelReservas;
 
@@ -67,6 +67,8 @@ public class Vista extends JFrame {
     public JButton btnDeleteReserva;
     public JList listReservas;
     public JTextField txtPrecio;
+    public JTextField txtTipoEquipamientoClase;
+    public JComboBox comboEntrenadoresElegir;
     public DefaultListModel dlmClientes;
     public DefaultListModel dlmSuscripciones;
     public DefaultListModel dlmEntrenadores;
@@ -90,6 +92,7 @@ public class Vista extends JFrame {
 
         panel1.setLayout(new BoxLayout(panel1, BoxLayout.Y_AXIS));
         txtPrecio.setEditable(false);
+        txtTipoEquipamientoClase.setEditable(false);
 
 
         setMenu();
@@ -159,9 +162,8 @@ public class Vista extends JFrame {
         comboEspecialidadEntrenador.setSelectedIndex(-1);
 
         for (TipoEquipamiento tipo : TipoEquipamiento.values()) {
-            comboEquipamiento.addItem(tipo.getDescripcion());
+            comboEquipamiento.addItem(tipo);
         }
-        comboEquipamiento.setSelectedIndex(-1);
 
         for (EstadoEquipamiento estado : EstadoEquipamiento.values()) {
             comboEstadoEquipamiento.addItem(estado.getValor());

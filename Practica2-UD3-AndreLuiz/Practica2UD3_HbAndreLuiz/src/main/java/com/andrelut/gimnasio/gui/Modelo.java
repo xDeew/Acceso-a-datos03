@@ -8,8 +8,10 @@ import org.hibernate.Transaction;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.query.Query;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Modelo {
 
@@ -41,6 +43,7 @@ public class Modelo {
                 conf.getProperties()).build();
 
         sessionFactory = conf.buildSessionFactory(ssr);
+
 
     }
 
@@ -91,12 +94,7 @@ public class Modelo {
         return reservas;
     }
 
-    ArrayList<ClienteEquipamiento> getClienteEquipamiento() {
-        Session session = abrirSesion();
-        ArrayList<ClienteEquipamiento> clienteEquipamientos = (ArrayList<ClienteEquipamiento>) session.createQuery("from ClienteEquipamiento").list();
-        session.close();
-        return clienteEquipamientos;
-    }
+
 
     ArrayList<EntrenadorEquipamiento> getEntrenadorEquipamiento() {
         Session session = abrirSesion();
@@ -105,12 +103,7 @@ public class Modelo {
         return entrenadorEquipamientos;
     }
 
-    ArrayList<ClienteClase> getInscripcionCliente() {
-        Session session = abrirSesion();
-        ArrayList<ClienteClase> inscripcionClientes = (ArrayList<ClienteClase>) session.createQuery("from InscripcionCliente").list();
-        session.close();
-        return inscripcionClientes;
-    }
+
 
     public boolean estaConectado() {
         return sessionFactory != null && sessionFactory.isOpen();
@@ -205,5 +198,109 @@ public class Modelo {
             System.out.println("La suscripción con el ID proporcionado no existe.");
         }
         session.close();
+    }
+
+    public void añadirClase(Clase clase) {
+        Session session = abrirSesion();
+        session.beginTransaction();
+        session.save(clase);
+        session.getTransaction().commit();
+        session.close();
+    }
+
+    public void añadirEquipamiento(Equipamiento equipamiento) {
+        Session session = abrirSesion();
+        session.beginTransaction();
+        session.save(equipamiento);
+        session.getTransaction().commit();
+        session.close();
+    }
+
+
+    public void eliminarEquipamiento(Equipamiento equipamientoAEliminar) {
+        Session session = abrirSesion();
+        session.beginTransaction();
+        session.delete(equipamientoAEliminar);
+        session.getTransaction().commit();
+        session.close();
+    }
+
+    public void añadirEntrenador(Entrenador entrenador) {
+        Session session = abrirSesion();
+        session.beginTransaction();
+        session.save(entrenador);
+        session.getTransaction().commit();
+        session.close();
+    }
+
+    public void eliminarEntrenador(Entrenador entrenadorAEliminar) {
+        Session session = abrirSesion();
+        session.beginTransaction();
+        session.delete(entrenadorAEliminar);
+        session.getTransaction().commit();
+        session.close();
+    }
+
+    public Entrenador getEntrenadorPorId(int idEntrenador) {
+        Session session = abrirSesion();
+        Entrenador entrenador = session.get(Entrenador.class, idEntrenador);
+        session.close();
+        return entrenador;
+    }
+
+    public Entrenador obtenerEntrenadorPorEspecialidad(String especialidad) {
+        String hql = "FROM Entrenador WHERE especialidad = :especialidad";
+        try (Session session = sessionFactory.openSession()) {
+            Query<Entrenador> query = session.createQuery(hql, Entrenador.class);
+            query.setParameter("especialidad", especialidad);
+            List<Entrenador> entrenadores = query.list();
+            if (!entrenadores.isEmpty()) {
+                return entrenadores.get(0);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public Entrenador obtenerEntrenadorPorNombre(String nombreEntrenador) {
+        String hql = "FROM Entrenador WHERE nombre = :nombre";
+        try (Session session = sessionFactory.openSession()) {
+            Query<Entrenador> query = session.createQuery(hql, Entrenador.class);
+            query.setParameter("nombre", nombreEntrenador);
+            List<Entrenador> entrenadores = query.list();
+            if (!entrenadores.isEmpty()) {
+                return entrenadores.get(0);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public Equipamiento obtenerEquipamientoPorTipo(String text) {
+        String hql = "FROM Equipamiento WHERE tipoEquipamiento = :tipo";
+        try (Session session = sessionFactory.openSession()) {
+            Query<Equipamiento> query = session.createQuery(hql, Equipamiento.class);
+            query.setParameter("tipo", text);
+            List<Equipamiento> equipamientos = query.list();
+            if (!equipamientos.isEmpty()) {
+                return equipamientos.get(0);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public List<Entrenador> obtenerTodosLosEntrenadores() {
+        String hql = "FROM Entrenador";
+        try (Session session = sessionFactory.openSession()) {
+            Query<Entrenador> query = session.createQuery(hql, Entrenador.class);
+            return query.list();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ArrayList<>();
     }
 }

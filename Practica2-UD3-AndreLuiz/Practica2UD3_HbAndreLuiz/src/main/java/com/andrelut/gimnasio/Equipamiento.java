@@ -1,5 +1,6 @@
 package com.andrelut.gimnasio;
 
+import com.andrelut.gimnasio.enums.TipoEquipamiento;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -14,14 +15,16 @@ public class Equipamiento {
     @Column(name = "id")
     private int id;
     @Basic
-    @Column(name = "tipo")
-    private String tipo;
-    @Basic
     @Column(name = "estado")
     private String estado;
     @Basic
     @Column(name = "costo")
     private BigDecimal costo;
+
+    @Basic
+    @Column(name = "tipo_equipamiento")
+    private String tipoEquipamiento;
+
     @OneToMany(mappedBy = "equipamientos")
     private List<Clase> clase;
     @ManyToMany(mappedBy = "equipamientos")
@@ -37,13 +40,7 @@ public class Equipamiento {
         this.id = id;
     }
 
-    public String getTipo() {
-        return tipo;
-    }
 
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
-    }
 
     public String getEstado() {
         return estado;
@@ -61,17 +58,28 @@ public class Equipamiento {
         this.costo = costo;
     }
 
+
+    public String getTipoEquipamiento() {
+        return tipoEquipamiento;
+    }
+
+    public void setTipoEquipamiento(String tipoEquipamiento) {
+        this.tipoEquipamiento = tipoEquipamiento;
+    }
+
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Equipamiento that = (Equipamiento) o;
-        return id == that.id && Objects.equals(tipo, that.tipo) && Objects.equals(estado, that.estado) && Objects.equals(costo, that.costo);
+        return id == that.id && Objects.equals(tipoEquipamiento, that.tipoEquipamiento) && Objects.equals(estado, that.estado) && Objects.equals(costo, that.costo);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, tipo, estado, costo);
+        return Objects.hash(id, tipoEquipamiento, estado, costo);
     }
 
     public List<Clase> getClase() {
@@ -97,4 +105,13 @@ public class Equipamiento {
     public void setClientes(List<Cliente> clientes) {
         this.clientes = clientes;
     }
+
+    @Override
+    public String toString() {
+        return String.format(
+                "Equipamiento: [ID: %d, Tipo: %s, Estado: %s, Costo: %s]",
+                id, tipoEquipamiento, estado, costo
+        );
+    }
+
 }

@@ -98,4 +98,11 @@ public class Entrenador {
     public void setClases(List<Clase> clases) {
         this.clases = clases;
     }
+
+    @Override
+    public String toString() {
+        return String.format(
+                "Entrenador{id=%d, nombre='%s', especialidad='%s', horario='%s'}",
+                id, nombre, especialidad, horario);
+    }
 }
