@@ -21,6 +21,7 @@ public class Controlador implements ActionListener, ListSelectionListener, ItemL
     private Vista vista;
     private Modelo modelo;
     private boolean conectado;
+    private boolean claseEliminadaConExito;
 
 
     public Controlador(Modelo modelo, Vista vista) {
@@ -173,11 +174,6 @@ public class Controlador implements ActionListener, ListSelectionListener, ItemL
 
             case "añadirClase":
 
-                if (vista == null || modelo == null) {
-                    System.out.println("La vista o el modelo no están inicializados");
-                    break;
-                }
-
                 List<Entrenador> entrenadoresDisponibles = modelo.obtenerTodosLosEntrenadores();
                 if (entrenadoresDisponibles == null || entrenadoresDisponibles.isEmpty()) {
                     JOptionPane.showMessageDialog(vista.frame, "No hay entrenadores disponibles. Por favor, añade un entrenador antes de continuar.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -185,7 +181,6 @@ public class Controlador implements ActionListener, ListSelectionListener, ItemL
                     System.out.println("Añadir clase");
                     Clase claseNueva = new Clase();
                     claseNueva.setNombre(vista.txtNombreClase.getText());
-                    claseNueva.setTipo(vista.comboTiposClases.getSelectedItem().toString());
                     Entrenador entrenadorSeleccionado = entrenadoresDisponibles.get(vista.comboEntrenadoresElegir.getSelectedIndex());
 
                     System.out.println("Entrenador seleccionado: " + entrenadorSeleccionado);
@@ -199,6 +194,9 @@ public class Controlador implements ActionListener, ListSelectionListener, ItemL
 
                 break;
             case "eliminarClase":
+                Clase claseAEliminar = (Clase) vista.listClase.getSelectedValue();
+                modelo.eliminarClase(claseAEliminar);
+
 
                 break;
 
@@ -218,31 +216,35 @@ public class Controlador implements ActionListener, ListSelectionListener, ItemL
                 break;
             case "eliminarEntrenador":
                 Entrenador entrenadorAEliminar = (Entrenador) vista.listEntrenadores.getSelectedValue();
-                modelo.eliminarEntrenador(entrenadorAEliminar);
+                Clase claseAEliminarEntrenador = modelo.obtenerClasePorEntrenador(entrenadorAEliminar);
+                if (claseAEliminarEntrenador != null) {
+                    Entrenador entrenador = claseAEliminarEntrenador.getEntrenador();
+                    if (entrenador != null && entrenador.equals(entrenadorAEliminar) && claseEliminadaConExito) {
+                        JOptionPane.showMessageDialog(vista.frame, "No se puede eliminar el entrenador porque tiene clases asignadas.", "Error", JOptionPane.ERROR_MESSAGE);
+                    } else {
+                        claseEliminadaConExito = true;
+                        modelo.eliminarEntrenador(entrenadorAEliminar);
+                    }
+                } else {
+                    claseEliminadaConExito = true;
+                    modelo.eliminarEntrenador(entrenadorAEliminar);
+                }
 
                 break;
-
-
             case "añadirReserva":
 
                 break;
             case "modificarReserva":
 
                 break;
-
             case "eliminarReserva":
 
                 break;
-
 
         }
         limpiarCampos();
         actualizar();
 
-    }
-
-    public List<Entrenador> obtenerTodosLosEntrenadores() {
-        return modelo.obtenerTodosLosEntrenadores();
     }
 
     private int obtenerIdSuscripcionSeleccionada() {
@@ -293,7 +295,6 @@ public class Controlador implements ActionListener, ListSelectionListener, ItemL
         } else {
             System.out.println("comboEntrenadorClase es null");
         }
-        vista.comboTiposClases.setSelectedIndex(-1);
     }
 
     private void limpiarCamposSuscripciones() {

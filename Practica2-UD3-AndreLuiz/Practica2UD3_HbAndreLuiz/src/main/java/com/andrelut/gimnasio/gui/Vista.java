@@ -46,7 +46,6 @@ public class Vista extends JFrame {
     public JList listClientes;
     public JList listSuscripciones;
     public JList listEntrenadores;
-    public JComboBox comboTiposClases;
     public JTextField txtNombreClase;
     public JList listClase;
     public JPanel JPanelReservas;
@@ -133,11 +132,6 @@ public class Vista extends JFrame {
             comboTipoSuscripcion.addItem(tipo.getNombre());
         }
         comboTipoSuscripcion.setSelectedIndex(-1);
-
-        for (TipoClase tipo : TipoClase.values()) {
-            comboTiposClases.addItem(tipo.getNombre());
-        }
-        comboTiposClases.setSelectedIndex(-1);
 
         for (TipoClase tipo : TipoClase.values()) {
             comboEspecialidadEntrenador.addItem(tipo.getNombre());

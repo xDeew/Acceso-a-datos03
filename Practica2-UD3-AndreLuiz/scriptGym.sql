@@ -23,35 +23,12 @@ CREATE TABLE `entrenadores` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Creación de tabla Equipamiento
-DROP TABLE IF EXISTS `equipamiento`;
-CREATE TABLE `equipamiento` (
-  `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `estado` VARCHAR(50) DEFAULT NULL,
-  `costo` DECIMAL(10,2) DEFAULT NULL,
-  `tipo_equipamiento` VARCHAR(100) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
-
-ALTER TABLE `equipamiento`
-ADD COLUMN `id_clase` INT(10) UNSIGNED DEFAULT NULL;
-
-
-ALTER TABLE `clases`
-ADD COLUMN `id_equipamiento` INT(10) UNSIGNED DEFAULT NULL;
-
-ALTER TABLE `clases`
-ADD CONSTRAINT `fk_clases_equipamiento` FOREIGN KEY (`id_equipamiento`) REFERENCES `equipamiento` (`id`);
-
-
 -- Creación de tabla Clases
 DROP TABLE IF EXISTS `clases`;
 CREATE TABLE `clases` (
   `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `nombre` VARCHAR(50) NOT NULL,
   `horario` VARCHAR(50) NOT NULL,
-  `tipo` VARCHAR(50) NOT NULL,
   `id_entrenador` INT(10) UNSIGNED NOT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_id_entrenador` (`id_entrenador`),
@@ -90,9 +67,6 @@ CREATE TABLE `clase_reserva` (
   CONSTRAINT `fk_clases_clase_reserva` FOREIGN KEY (`id_clase`) REFERENCES `clases` (`id`),
   CONSTRAINT `fk_reservas_clase_reserva` FOREIGN KEY (`id_reserva`) REFERENCES `reservas` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- Continúa con la creación de las demás tablas necesarias...
-
 
 DROP TABLE IF EXISTS `entrenador_clase`;
 CREATE TABLE `entrenador_clase` (

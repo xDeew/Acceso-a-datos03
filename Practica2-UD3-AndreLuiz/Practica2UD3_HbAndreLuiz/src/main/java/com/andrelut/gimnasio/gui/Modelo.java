@@ -206,11 +206,24 @@ public class Modelo {
     }
 
     public void eliminarEntrenador(Entrenador entrenadorAEliminar) {
-        Session session = abrirSesion();
-        session.beginTransaction();
-        session.delete(entrenadorAEliminar);
-        session.getTransaction().commit();
-        session.close();
+        Transaction tx = null;
+        try (Session session = abrirSesion()) {
+            tx = session.beginTransaction();
+            Entrenador entrenador = session.get(Entrenador.class, entrenadorAEliminar.getId());
+            if (entrenador != null) {
+                List<Clase> clases = new ArrayList<>(entrenador.getClases());
+                for (Clase clase : clases) {
+                    session.delete(clase);
+                }
+                session.delete(entrenador);
+                tx.commit();
+            } else {
+                System.out.println("El entrenador con el ID proporcionado no existe.");
+            }
+        } catch (Exception e) {
+            if (tx != null) tx.rollback();
+            e.printStackTrace();
+        }
     }
 
 
@@ -223,5 +236,34 @@ public class Modelo {
             e.printStackTrace();
         }
         return new ArrayList<>();
+    }
+
+    public void eliminarClase(Clase claseAEliminar) {
+        Transaction tx = null;
+        try (Session session = abrirSesion()) {
+            tx = session.beginTransaction();
+            Clase clase = session.get(Clase.class, claseAEliminar.getId());
+            if (clase != null) {
+                session.delete(clase);
+                tx.commit();
+            } else {
+                System.out.println("La clase con el ID proporcionado no existe.");
+            }
+        } catch (Exception e) {
+            if (tx != null) tx.rollback();
+            e.printStackTrace();
+        }
+    }
+
+    public Clase obtenerClasePorEntrenador(Entrenador entrenadorAEliminar) {
+        String hql = "FROM Clase WHERE entrenador = :entrenador";
+        try (Session session = sessionFactory.openSession()) {
+            Query<Clase> query = session.createQuery(hql, Clase.class);
+            query.setParameter("entrenador", entrenadorAEliminar);
+            return query.uniqueResult();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

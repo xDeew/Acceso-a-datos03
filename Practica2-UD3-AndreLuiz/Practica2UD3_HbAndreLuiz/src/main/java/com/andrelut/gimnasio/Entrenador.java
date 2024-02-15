@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "entrenadores", schema = "gimnasiodb", catalog = "")
@@ -25,9 +26,12 @@ public class Entrenador {
     @JoinTable(name = "entrenador_clase", catalog = "", schema = "gimnasiodb", joinColumns = @JoinColumn(name = "id_entrenador", referencedColumnName = "id", nullable = false), inverseJoinColumns = @JoinColumn(name = "id_clase", referencedColumnName = "id", nullable = false))
     private List<Clase> clases;
 
+
     public int getId() {
         return id;
     }
+
+
 
     public void setId(int id) {
         this.id = id;

@@ -15,9 +15,6 @@ public class Clase {
     @Basic
     @Column(name = "nombre")
     private String nombre;
-    @Basic
-    @Column(name = "tipo")
-    private String tipo;
     @ManyToMany
     @JoinTable(name = "clase_reserva", catalog = "", schema = "gimnasiodb", joinColumns = @JoinColumn(name = "id_clase", referencedColumnName = "id", nullable = false), inverseJoinColumns = @JoinColumn(name = "id_reserva", referencedColumnName = "id", nullable = false))
     private List<Reserva> reservas;
@@ -53,26 +50,17 @@ public class Clase {
     }
 
 
-
-    public String getTipo() {
-        return tipo;
-    }
-
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Clase clase = (Clase) o;
-        return id == clase.id && Objects.equals(nombre, clase.nombre) && Objects.equals(tipo, clase.tipo);
+        return id == clase.id && Objects.equals(nombre, clase.nombre);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, nombre, tipo);
+        return Objects.hash(id, nombre);
     }
 
     public List<Reserva> getReservas() {
@@ -94,8 +82,8 @@ public class Clase {
     @Override
     public String toString() {
         return String.format(
-                "Clase { id=%d, nombre='%s', tipo='%s'}",
-                id, nombre, tipo
+                "Clase { id=%d, nombre='%s', entrenador='%s'}",
+                id, nombre, entrenador.getNombre(), entrenador.getEspecialidad()
         );
     }
 }
