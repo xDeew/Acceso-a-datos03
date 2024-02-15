@@ -34,9 +34,8 @@ CREATE TABLE `clases` (
   CONSTRAINT `fk_entrenadores_clases` FOREIGN KEY (`id_entrenador`) REFERENCES `entrenadores` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-
 ALTER TABLE clases
-MODIFY COLUMN descripcion VARCHAR(10000);
+ADD COLUMN descripcion VARCHAR(10000);
 
  
 DROP TABLE IF EXISTS `suscripciones`;
