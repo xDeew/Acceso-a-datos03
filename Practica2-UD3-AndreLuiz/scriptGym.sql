@@ -34,16 +34,8 @@ CREATE TABLE `clases` (
   CONSTRAINT `fk_entrenadores_clases` FOREIGN KEY (`id_entrenador`) REFERENCES `entrenadores` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Creación de tabla Reservas
-DROP TABLE IF EXISTS `reservas`;
-CREATE TABLE `reservas` (
-  `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `fecha` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
-  `id_cliente` INT(10) UNSIGNED NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk_id_cliente` (`id_cliente`),
-  CONSTRAINT `fk_clientes_reservas` FOREIGN KEY (`id_cliente`) REFERENCES `clientes` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+ALTER TABLE `clases`
+ADD COLUMN `especialidad` ENUM('Aerobico', 'Musculacion', 'Crossfit', 'Yoga', 'Pilates', 'Zumba', 'Gimnasia', 'Spinning') DEFAULT NULL AFTER `nombre`;
 
 DROP TABLE IF EXISTS `suscripciones`;
 CREATE TABLE `suscripciones` (
@@ -55,17 +47,6 @@ CREATE TABLE `suscripciones` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_cliente` (`id_cliente`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- Creación de tabla Clase_Reserva (relación muchos a muchos entre clases y reservas)
-DROP TABLE IF EXISTS `clase_reserva`;
-CREATE TABLE `clase_reserva` (
-  `id_clase` INT(10) UNSIGNED NOT NULL,
-  `id_reserva` INT(10) UNSIGNED NOT NULL,
-  PRIMARY KEY (`id_clase`, `id_reserva`),
-  KEY `fk_id_reserva` (`id_reserva`),
-  CONSTRAINT `fk_clases_clase_reserva` FOREIGN KEY (`id_clase`) REFERENCES `clases` (`id`),
-  CONSTRAINT `fk_reservas_clase_reserva` FOREIGN KEY (`id_reserva`) REFERENCES `reservas` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 DROP TABLE IF EXISTS `entrenador_clase`;
 CREATE TABLE `entrenador_clase` (

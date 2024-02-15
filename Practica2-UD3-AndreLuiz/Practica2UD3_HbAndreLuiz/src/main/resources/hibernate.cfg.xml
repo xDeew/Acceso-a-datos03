@@ -11,7 +11,6 @@
         <mapping class="com.andrelut.gimnasio.Clase"/>
         <mapping class="com.andrelut.gimnasio.Cliente"/>
         <mapping class="com.andrelut.gimnasio.Entrenador"/>
-        <mapping class="com.andrelut.gimnasio.Reserva"/>
         <mapping class="com.andrelut.gimnasio.Suscripcion"/>
 
 

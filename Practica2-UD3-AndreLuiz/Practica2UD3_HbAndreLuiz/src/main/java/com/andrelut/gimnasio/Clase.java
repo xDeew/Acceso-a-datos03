@@ -1,5 +1,6 @@
 package com.andrelut.gimnasio;
 
+import com.andrelut.gimnasio.enums.TipoClase;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -15,15 +16,13 @@ public class Clase {
     @Basic
     @Column(name = "nombre")
     private String nombre;
-    @ManyToMany
-    @JoinTable(name = "clase_reserva", catalog = "", schema = "gimnasiodb", joinColumns = @JoinColumn(name = "id_clase", referencedColumnName = "id", nullable = false), inverseJoinColumns = @JoinColumn(name = "id_reserva", referencedColumnName = "id", nullable = false))
-    private List<Reserva> reservas;
     @ManyToMany(mappedBy = "clases")
     private List<Entrenador> entrenadores;
 
     @ManyToOne
     @JoinColumn(name = "id_entrenador", referencedColumnName = "id")
     private Entrenador entrenador;
+
 
     public Entrenador getEntrenador() {
         return entrenador;
@@ -63,13 +62,7 @@ public class Clase {
         return Objects.hash(id, nombre);
     }
 
-    public List<Reserva> getReservas() {
-        return reservas;
-    }
 
-    public void setReservas(List<Reserva> reservas) {
-        this.reservas = reservas;
-    }
 
     public List<Entrenador> getEntrenadores() {
         return entrenadores;

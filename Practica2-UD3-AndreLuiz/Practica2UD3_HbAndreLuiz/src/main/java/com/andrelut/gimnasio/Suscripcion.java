@@ -80,7 +80,7 @@ public class Suscripcion {
     @Override
     public String toString() {
         return String.format(
-                "Suscripcion { id=%d, tipo='%s', duracion=%d, costo=%f}",
+                "Suscripcion { id=%d, tipo='%s', duracion=%d, costo=%.2f}",
                 id, tipo, duracion, costo
         );
     }

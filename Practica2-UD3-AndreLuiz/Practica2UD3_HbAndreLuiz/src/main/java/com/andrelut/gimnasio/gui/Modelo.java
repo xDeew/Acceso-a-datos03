@@ -10,21 +10,12 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
 
-import javax.swing.*;
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Modelo {
 
     private SessionFactory sessionFactory;
-
-    private Vista vista;
-
-    public Modelo(Vista vista) {
-        this.vista = vista;
-    }
-
     public void desconectar() {
         if (sessionFactory != null && !sessionFactory.isOpen()) {
             sessionFactory.close();
@@ -40,7 +31,6 @@ public class Modelo {
         conf.addAnnotatedClass(Suscripcion.class);
         conf.addAnnotatedClass(Clase.class);
         conf.addAnnotatedClass(Entrenador.class);
-        conf.addAnnotatedClass(Reserva.class);
 
         StandardServiceRegistry ssr = new StandardServiceRegistryBuilder().applySettings(
                 conf.getProperties()).build();
@@ -81,27 +71,6 @@ public class Modelo {
         ArrayList<Entrenador> entrenadores = (ArrayList<Entrenador>) session.createQuery("from Entrenador").list();
         session.close();
         return entrenadores;
-    }
-
-
-    public ArrayList<Reserva> getReservas() {
-        Session session = abrirSesion();
-        Transaction tx = null;
-        ArrayList<Reserva> reservas = new ArrayList<>();
-        try {
-            tx = session.beginTransaction();
-            Query query = session.createQuery("from Reserva");
-            for (Object o : query.list()) {
-                reservas.add((Reserva) o);
-            }
-            tx.commit();
-        } catch (RuntimeException e) {
-            if (tx != null) tx.rollback();
-            e.printStackTrace();
-        } finally {
-            session.close();
-        }
-        return reservas;
     }
 
 
@@ -296,118 +265,5 @@ public class Modelo {
         session.close();
     }
 
-    public void añadirReserva(Date fecha, int idCliente, List<Integer> idClases) {
-        if (idClases == null || idClases.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Debes seleccionar al menos una clase para reservar.", "Error", JOptionPane.ERROR_MESSAGE);
-        }
 
-        Session session = abrirSesion();
-        Transaction tx = null;
-        try {
-            tx = session.beginTransaction();
-
-            Reserva nuevaReserva = new Reserva();
-            nuevaReserva.setFecha(fecha);
-            Cliente cliente = session.get(Cliente.class, idCliente);
-            nuevaReserva.setCliente(cliente);
-
-            List<Clase> clasesParaReserva = new ArrayList<>();
-            for (Integer idClase : idClases) {
-                Clase clase = session.get(Clase.class, idClase);
-                if (clase != null) {
-                    Entrenador entrenador = clase.getEntrenador();
-                    if (entrenador.getEspecialidad().equals(clase.getNombre())) {
-                        clasesParaReserva.add(clase);
-                        clase.getReservas().add(nuevaReserva);
-                    } else {
-                        JOptionPane.showMessageDialog(null, "No existen clases de ese tipo.", "Error", JOptionPane.ERROR_MESSAGE);
-                        return;
-                    }
-                }
-            }
-
-            if (clasesParaReserva.isEmpty()) {
-                JOptionPane.showMessageDialog(null, "No existen clases de ese tipo.", "Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
-            nuevaReserva.setClases(clasesParaReserva);
-            session.save(nuevaReserva);
-
-            for (Clase clase : clasesParaReserva) {
-                session.saveOrUpdate(clase);
-            }
-
-            tx.commit();
-        } catch (Exception e) {
-            if (tx != null) tx.rollback();
-            e.printStackTrace();
-        } finally {
-            session.close();
-        }
-    }
-
-
-    public List<Integer> getIdClasesSeleccionadas() {
-        String hql = "SELECT id FROM Clase";
-        try (Session session = sessionFactory.openSession()) {
-            Query<Integer> query = session.createQuery(hql, Integer.class);
-            return query.list();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return new ArrayList<>();
-    }
-
-    public int getIdClienteSeleccionado() {
-        Cliente clienteSeleccionado = (Cliente) vista.comboClientesReserva.getSelectedItem();
-        if (clienteSeleccionado != null) {
-            return clienteSeleccionado.getId();
-        } else {
-            return -1;
-        }
-    }
-
-    public List<Reserva> obtenerReservasPorCliente(int idCliente) {
-        List<Reserva> reservas = new ArrayList<>();
-        Session session = null;
-        Transaction tx = null;
-
-        try {
-            session = abrirSesion(); // Asume que este método abre una nueva sesión de Hibernate
-            tx = session.beginTransaction();
-
-            // Utiliza HQL para obtener todas las reservas del cliente por su ID
-            String hql = "FROM Reserva r WHERE r.cliente.id = :idCliente";
-            Query<Reserva> query = session.createQuery(hql, Reserva.class);
-            query.setParameter("idCliente", idCliente);
-            reservas = query.list();
-
-            tx.commit(); // Aunque no es necesario para consultas de lectura, es una buena práctica manejar transacciones
-        } catch (Exception e) {
-            if (tx != null) tx.rollback();
-            e.printStackTrace();
-        } finally {
-            if (session != null) session.close();
-        }
-
-        return reservas;
-    }
-
-    public void eliminarReserva(int id) {
-        Transaction tx = null;
-        try (Session session = abrirSesion()) {
-            tx = session.beginTransaction();
-            Reserva reserva = session.get(Reserva.class, id);
-            if (reserva != null) {
-                session.delete(reserva);
-                tx.commit();
-            } else {
-                System.out.println("La reserva con el ID proporcionado no existe.");
-            }
-        } catch (Exception e) {
-            if (tx != null) tx.rollback();
-            e.printStackTrace();
-        }
-    }
 }

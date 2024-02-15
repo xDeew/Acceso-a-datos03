@@ -2,13 +2,11 @@ package com.andrelut.gimnasio.gui;
 
 import com.andrelut.gimnasio.enums.TipoClase;
 import com.andrelut.gimnasio.enums.TipoSuscripcion;
-import com.github.lgooddatepicker.components.DatePicker;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class Vista extends JFrame {
-    private static final String TITULOFRAME = "Gimnasio";
 
 
     public JTabbedPane tabbedPanedGimnasio;
@@ -33,7 +31,6 @@ public class Vista extends JFrame {
     public JButton btnDeleteSuscripciones;
     public JMenuItem itemConexion;
     public JMenuItem itemSalir;
-    public JComboBox comboEntrenadorClase;
     public JTextField txtNombreEntrenador;
     public JTextField txtHorario;
     public JButton btnAddEntrenador;
@@ -47,25 +44,19 @@ public class Vista extends JFrame {
     public JList listClientes;
     public JList listSuscripciones;
     public JList listEntrenadores;
-    public JTextField txtNombreClase;
     public JList listClase;
-    public JPanel JPanelReservas;
 
-    public JButton btnAddReserva;
-    public JButton btnModificarReserva;
-    public JButton btnDeleteReserva;
+
     public JList listReservas;
     public JTextField txtPrecio;
     public JComboBox comboEntrenadoresElegir;
-    public DatePicker fechaReserva;
     public JComboBox comboClientesReserva;
-    public JComboBox comboClasesReserva;
-    public JTextArea txtAreaClasesAsociadas;
+
+    public JComboBox comboTipoClases;
     public DefaultListModel dlmClientes;
     public DefaultListModel dlmSuscripciones;
     public DefaultListModel dlmEntrenadores;
     public DefaultListModel dlmClases;
-    public DefaultListModel dlmReservas;
 
 
     /**
@@ -83,7 +74,7 @@ public class Vista extends JFrame {
 
         panel1.setLayout(new BoxLayout(panel1, BoxLayout.Y_AXIS));
         txtPrecio.setEditable(false);
-        txtAreaClasesAsociadas.setEditable(false);
+        //  txtAreaClasesAsociadas.setEditable(false);
 
 
         setMenu();
@@ -105,9 +96,6 @@ public class Vista extends JFrame {
 
         dlmClases = new DefaultListModel();
         listClase.setModel(dlmClases);
-
-        dlmReservas = new DefaultListModel();
-        listReservas.setModel(dlmReservas);
 
 
     }
@@ -144,22 +132,12 @@ public class Vista extends JFrame {
         }
         comboEspecialidadEntrenador.setSelectedIndex(-1);
 
+
         for (TipoClase tipo : TipoClase.values()) {
-            comboClasesReserva.addItem(tipo.getNombre());
+            comboTipoClases.addItem(tipo.getNombre());
         }
-        comboClasesReserva.setSelectedIndex(-1);
+        comboTipoClases.setSelectedIndex(-1);
 
 
     }
-
-
-    public JTextField getTxtEmail() {
-        return txtEmail;
-    }
-
-    public JTextField getTxtTelefono() {
-        return txtTelefono;
-    }
-
-
 }
