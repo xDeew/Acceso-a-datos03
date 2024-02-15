@@ -60,6 +60,7 @@ public class Vista extends JFrame {
     public DatePicker fechaReserva;
     public JComboBox comboClientesReserva;
     public JComboBox comboClasesReserva;
+    public JTextArea txtAreaClasesAsociadas;
     public DefaultListModel dlmClientes;
     public DefaultListModel dlmSuscripciones;
     public DefaultListModel dlmEntrenadores;
@@ -82,6 +83,7 @@ public class Vista extends JFrame {
 
         panel1.setLayout(new BoxLayout(panel1, BoxLayout.Y_AXIS));
         txtPrecio.setEditable(false);
+        txtAreaClasesAsociadas.setEditable(false);
 
 
         setMenu();

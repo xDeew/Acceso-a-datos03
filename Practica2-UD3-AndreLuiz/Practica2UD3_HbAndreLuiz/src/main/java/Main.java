@@ -9,7 +9,7 @@ public class Main {
         try {
             UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
             Vista vista = new Vista();
-            Modelo modelo = new Modelo();
+            Modelo modelo = new Modelo(vista);
             Controlador controlador = new Controlador(modelo, vista);
         } catch (Exception e) {
             e.printStackTrace();

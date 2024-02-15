@@ -19,9 +19,8 @@ public class Reserva {
     @ManyToOne
     @JoinColumn(name = "id_cliente", referencedColumnName = "id")
     private Cliente cliente;
-    @ManyToMany(mappedBy = "reservas")
+    @ManyToMany(mappedBy = "reservas", fetch = FetchType.EAGER)
     private List<Clase> clases;
-
 
     public int getId() {
         return id;
@@ -35,16 +34,15 @@ public class Reserva {
         return fecha;
     }
 
+    public void setFecha(Date fecha) {
+        this.fecha = fecha;
+    }
+
     public Cliente getCliente() {
         return cliente;
     }
-
     public void setCliente(Cliente cliente) {
         this.cliente = cliente;
-    }
-
-    public void setFecha(Date fecha) {
-        this.fecha = fecha;
     }
 
     @Override

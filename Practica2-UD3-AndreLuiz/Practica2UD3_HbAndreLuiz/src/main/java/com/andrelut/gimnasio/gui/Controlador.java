@@ -68,6 +68,10 @@ public class Controlador implements ActionListener, ListSelectionListener, ItemL
         vista.btnModificarClase.addActionListener(listener);
         vista.btnDeleteClase.addActionListener(listener);
 
+        vista.btnAddReserva.addActionListener(listener);
+        vista.btnModificarReserva.addActionListener(listener);
+        vista.btnDeleteReserva.addActionListener(listener);
+
 
     }
 
@@ -119,6 +123,7 @@ public class Controlador implements ActionListener, ListSelectionListener, ItemL
                 } else {
                     modelo.añadirCliente(cliente);
                     actualizarComboClientesRegistrados();
+                    actualizarComboClientesReservas();
 
                 }
                 break;
@@ -243,7 +248,6 @@ public class Controlador implements ActionListener, ListSelectionListener, ItemL
                 List<Integer> idClases = modelo.getIdClasesSeleccionadas();
 
                 modelo.añadirReserva(fechaReserva, idCliente, idClases);
-
                 break;
 
 
@@ -251,6 +255,8 @@ public class Controlador implements ActionListener, ListSelectionListener, ItemL
 
                 break;
             case "eliminarReserva":
+                Reserva reservaAEliminar = (Reserva) vista.listReservas.getSelectedValue();
+                modelo.eliminarReserva(reservaAEliminar.getId());
 
                 break;
 
@@ -266,6 +272,7 @@ public class Controlador implements ActionListener, ListSelectionListener, ItemL
         for (Cliente cliente : clientes) {
             vista.comboClientesReserva.addItem(cliente);
         }
+        vista.comboClientesReserva.setSelectedIndex(-1);
     }
 
 
@@ -282,11 +289,29 @@ public class Controlador implements ActionListener, ListSelectionListener, ItemL
         }
     }
 
+
     private void actualizarComboEntrenadoresElegir() {
         vista.comboEntrenadoresElegir.removeAllItems();
         List<Entrenador> entrenadores = modelo.obtenerTodosLosEntrenadores();
         for (Entrenador entrenador : entrenadores) {
             vista.comboEntrenadoresElegir.addItem(entrenador.getNombre());
+        }
+    }
+
+    private void actualizarClasesAsociadas() {
+        Cliente clienteSeleccionado = (Cliente) vista.comboClientesReserva.getSelectedItem();
+        if (clienteSeleccionado != null) {
+            List<Reserva> reservas = modelo.obtenerReservasPorCliente(clienteSeleccionado.getId());
+            StringBuilder clasesAsociadas = new StringBuilder();
+            for (Reserva reserva : reservas) {
+                for (Clase clase : reserva.getClases()) {
+                    if (clasesAsociadas.length() > 0) {
+                        clasesAsociadas.append(" / ");
+                    }
+                    clasesAsociadas.append(clase.getNombre());
+                }
+            }
+            vista.txtAreaClasesAsociadas.setText(clasesAsociadas.toString());
         }
     }
 
@@ -296,6 +321,13 @@ public class Controlador implements ActionListener, ListSelectionListener, ItemL
         limpiarCamposSuscripciones();
         limpiarCamposClase();
         limpiarCamposEntrenador();
+        limpiarCamposReserva();
+    }
+
+    private void limpiarCamposReserva() {
+        vista.fechaReserva.setDate(null);
+        vista.comboClientesReserva.setSelectedIndex(-1);
+        vista.comboClasesReserva.setSelectedIndex(-1);
     }
 
 
@@ -410,10 +442,16 @@ public class Controlador implements ActionListener, ListSelectionListener, ItemL
             }
             Reserva reserva = (Reserva) vista.listReservas.getSelectedValue();
             if (reserva != null) {
+                System.out.println("Reserva ID: " + reserva.getId());
+                cliente = reserva.getCliente();
+                System.out.println("Cliente ID: " + cliente.getId());
+                System.out.println("Cliente Name: " + cliente.getNombre());
                 vista.fechaReserva.setDate(reserva.getFecha().toLocalDate());
-                // vista.comboClientesReserva.setSelectedItem(reserva.getCliente());
-            }
+                vista.comboClientesReserva.setSelectedItem(cliente);
 
+                vista.txtAreaClasesAsociadas.setText("");
+                actualizarClasesAsociadas();
+            }
         }
     }
 
