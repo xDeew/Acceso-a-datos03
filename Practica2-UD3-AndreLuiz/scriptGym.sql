@@ -28,7 +28,6 @@ DROP TABLE IF EXISTS `clases`;
 CREATE TABLE `clases` (
   `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `nombre` VARCHAR(50) NOT NULL,
-  `horario` VARCHAR(50) NOT NULL,
   `id_entrenador` INT(10) UNSIGNED NOT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_id_entrenador` (`id_entrenador`),

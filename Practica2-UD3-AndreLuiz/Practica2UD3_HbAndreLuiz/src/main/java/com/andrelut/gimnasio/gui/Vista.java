@@ -2,6 +2,7 @@ package com.andrelut.gimnasio.gui;
 
 import com.andrelut.gimnasio.enums.TipoClase;
 import com.andrelut.gimnasio.enums.TipoSuscripcion;
+import com.github.lgooddatepicker.components.DatePicker;
 
 import javax.swing.*;
 import java.awt.*;
@@ -56,6 +57,9 @@ public class Vista extends JFrame {
     public JList listReservas;
     public JTextField txtPrecio;
     public JComboBox comboEntrenadoresElegir;
+    public DatePicker fechaReserva;
+    public JComboBox comboClientesReserva;
+    public JComboBox comboClasesReserva;
     public DefaultListModel dlmClientes;
     public DefaultListModel dlmSuscripciones;
     public DefaultListModel dlmEntrenadores;
@@ -138,7 +142,10 @@ public class Vista extends JFrame {
         }
         comboEspecialidadEntrenador.setSelectedIndex(-1);
 
-
+        for (TipoClase tipo : TipoClase.values()) {
+            comboClasesReserva.addItem(tipo.getNombre());
+        }
+        comboClasesReserva.setSelectedIndex(-1);
 
 
     }
@@ -151,4 +158,6 @@ public class Vista extends JFrame {
     public JTextField getTxtTelefono() {
         return txtTelefono;
     }
+
+
 }

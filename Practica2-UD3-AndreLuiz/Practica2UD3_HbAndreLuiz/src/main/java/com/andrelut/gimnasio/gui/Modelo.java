@@ -10,6 +10,7 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -265,5 +266,57 @@ public class Modelo {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public void modificarEntrenador(Entrenador entrenadorModificado) {
+        Session session = abrirSesion();
+        session.beginTransaction();
+        session.saveOrUpdate(entrenadorModificado);
+        session.getTransaction().commit();
+        session.close();
+    }
+
+    public void añadirReserva(Date fecha, int idCliente, List<Integer> idClases) {
+        Session session = abrirSesion();
+        Transaction tx = null;
+        try {
+            tx = session.beginTransaction();
+
+
+            Reserva nuevaReserva = new Reserva();
+            nuevaReserva.setFecha(fecha);
+            Cliente cliente = session.get(Cliente.class, idCliente);
+            nuevaReserva.setCliente(cliente);
+
+            List<Clase> clasesParaReserva = new ArrayList<>();
+            for (Integer idClase : idClases) {
+                Clase clase = session.get(Clase.class, idClase);
+                if (clase != null) {
+                    clasesParaReserva.add(clase);
+                }
+            }
+
+            session.save(nuevaReserva);
+
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null) tx.rollback();
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+    }
+
+
+
+    public List<Integer> getIdClasesSeleccionadas() {
+        String hql = "SELECT id FROM Clase";
+        try (Session session = sessionFactory.openSession()) {
+            Query<Integer> query = session.createQuery(hql, Integer.class);
+            return query.list();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ArrayList<>();
     }
 }

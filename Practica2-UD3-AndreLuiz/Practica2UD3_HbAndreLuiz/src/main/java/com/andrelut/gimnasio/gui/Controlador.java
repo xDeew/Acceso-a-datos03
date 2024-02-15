@@ -1,9 +1,6 @@
 package com.andrelut.gimnasio.gui;
 
-import com.andrelut.gimnasio.Clase;
-import com.andrelut.gimnasio.Cliente;
-import com.andrelut.gimnasio.Entrenador;
-import com.andrelut.gimnasio.Suscripcion;
+import com.andrelut.gimnasio.*;
 import com.andrelut.gimnasio.enums.TipoSuscripcion;
 
 import javax.swing.*;
@@ -13,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -102,6 +100,7 @@ public class Controlador implements ActionListener, ListSelectionListener, ItemL
                 vista.comboClientesRegistrados.setEnabled(true);
                 actualizarComboClientesRegistrados();
                 actualizarComboEntrenadoresElegir();
+                actualizarComboClientesReservas();
 
 
                 break;
@@ -186,7 +185,6 @@ public class Controlador implements ActionListener, ListSelectionListener, ItemL
                     System.out.println("Entrenador seleccionado: " + entrenadorSeleccionado);
                     claseNueva.setEntrenador(entrenadorSeleccionado);
                     modelo.añadirClase(claseNueva);
-
                 }
                 break;
 
@@ -212,6 +210,12 @@ public class Controlador implements ActionListener, ListSelectionListener, ItemL
 
                 break;
             case "modificarEntrenador":
+                Entrenador entrenadorModificado = (Entrenador) vista.listEntrenadores.getSelectedValue();
+                entrenadorModificado.setNombre(vista.txtNombreEntrenador.getText());
+                entrenadorModificado.setEspecialidad(vista.comboEspecialidadEntrenador.getSelectedItem().toString());
+                entrenadorModificado.setHorario(vista.txtHorario.getText());
+                modelo.modificarEntrenador(entrenadorModificado);
+
 
                 break;
             case "eliminarEntrenador":
@@ -232,8 +236,17 @@ public class Controlador implements ActionListener, ListSelectionListener, ItemL
 
                 break;
             case "añadirReserva":
+                Date fechaReserva = Date.valueOf(vista.fechaReserva.getDate());
+
+                int idCliente = modelo.getIdClienteSeleccionado();
+
+                List<Integer> idClases = modelo.getIdClasesSeleccionadas();
+
+                modelo.añadirReserva(fechaReserva, idCliente, idClases);
 
                 break;
+
+
             case "modificarReserva":
 
                 break;
@@ -246,6 +259,15 @@ public class Controlador implements ActionListener, ListSelectionListener, ItemL
         actualizar();
 
     }
+
+    private void actualizarComboClientesReservas() {
+        vista.comboClientesReserva.removeAllItems();
+        ArrayList<Cliente> clientes = modelo.getClientes();
+        for (Cliente cliente : clientes) {
+            vista.comboClientesReserva.addItem(cliente);
+        }
+    }
+
 
     private int obtenerIdSuscripcionSeleccionada() {
         Suscripcion suscripcionSeleccionada = (Suscripcion) vista.listSuscripciones.getSelectedValue();
@@ -272,7 +294,7 @@ public class Controlador implements ActionListener, ListSelectionListener, ItemL
     private void limpiarCampos() {
         limpiarCamposCliente();
         limpiarCamposSuscripciones();
-        //  limpiarCamposClase();
+        limpiarCamposClase();
         limpiarCamposEntrenador();
     }
 
@@ -284,17 +306,8 @@ public class Controlador implements ActionListener, ListSelectionListener, ItemL
     }
 
     private void limpiarCamposClase() {
-        if (vista.txtNombreClase != null) {
-            vista.txtNombreClase.setText("");
-        } else {
-            System.out.println("txtNombreClase es null");
-
-        }
-        if (vista.comboEntrenadorClase != null) {
-            vista.comboEntrenadorClase.setSelectedIndex(-1);
-        } else {
-            System.out.println("comboEntrenadorClase es null");
-        }
+        vista.txtNombreClase.setText("");
+        vista.comboEntrenadoresElegir.setSelectedIndex(-1);
     }
 
     private void limpiarCamposSuscripciones() {
@@ -317,6 +330,14 @@ public class Controlador implements ActionListener, ListSelectionListener, ItemL
         listarSuscripciones(modelo.getSuscripciones());
         listarEntrenadores(modelo.getEntrenadores());
         listarClases(modelo.getClases());
+        listarReservas(modelo.getReservas());
+    }
+
+    private void listarReservas(ArrayList<Reserva> reservas) {
+        vista.dlmReservas.clear();
+        for (Reserva reserva : reservas) {
+            vista.dlmReservas.addElement(reserva);
+        }
     }
 
 
@@ -376,6 +397,23 @@ public class Controlador implements ActionListener, ListSelectionListener, ItemL
                 vista.txtDuracion.setText(String.valueOf(suscripcion.getDuracion()));
                 vista.txtPrecio.setText(String.valueOf(suscripcion.getCosto()));
             }
+            Entrenador entrenador = (Entrenador) vista.listEntrenadores.getSelectedValue();
+            if (entrenador != null) {
+                vista.txtNombreEntrenador.setText(entrenador.getNombre());
+                vista.comboEspecialidadEntrenador.setSelectedItem(entrenador.getEspecialidad());
+                vista.txtHorario.setText(entrenador.getHorario());
+            }
+            Clase clase = (Clase) vista.listClase.getSelectedValue();
+            if (clase != null) {
+                vista.txtNombreClase.setText(clase.getNombre());
+                vista.comboEntrenadorClase.setSelectedItem(clase.getEntrenador());
+            }
+            Reserva reserva = (Reserva) vista.listReservas.getSelectedValue();
+            if (reserva != null) {
+                vista.fechaReserva.setDate(reserva.getFecha().toLocalDate());
+                // vista.comboClientesReserva.setSelectedItem(reserva.getCliente());
+            }
+
         }
     }
 

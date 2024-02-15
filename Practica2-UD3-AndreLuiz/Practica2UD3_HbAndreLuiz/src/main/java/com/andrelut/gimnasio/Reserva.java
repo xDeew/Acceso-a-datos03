@@ -16,8 +16,12 @@ public class Reserva {
     @Basic
     @Column(name = "fecha")
     private Date fecha;
+    @ManyToOne
+    @JoinColumn(name = "id_cliente", referencedColumnName = "id")
+    private Cliente cliente;
     @ManyToMany(mappedBy = "reservas")
     private List<Clase> clases;
+
 
     public int getId() {
         return id;
@@ -29,6 +33,14 @@ public class Reserva {
 
     public Date getFecha() {
         return fecha;
+    }
+
+    public Cliente getCliente() {
+        return cliente;
+    }
+
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
     }
 
     public void setFecha(Date fecha) {
