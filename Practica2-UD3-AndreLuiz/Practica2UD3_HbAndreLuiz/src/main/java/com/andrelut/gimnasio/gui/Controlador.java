@@ -319,6 +319,7 @@ public class Controlador implements ActionListener, ListSelectionListener, ItemL
     private void limpiarCamposClase() {
         vista.comboTipoClases.setSelectedIndex(-1);
         vista.comboEntrenadoresElegir.setSelectedIndex(-1);
+        vista.txtAreaDescripcionClase.setText("");
     }
 
     private void limpiarCamposSuscripciones() {
