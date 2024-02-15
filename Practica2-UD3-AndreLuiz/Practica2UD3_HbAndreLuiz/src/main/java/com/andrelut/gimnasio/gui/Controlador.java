@@ -46,6 +46,14 @@ public class Controlador implements ActionListener, ListSelectionListener, ItemL
             }
         });
 
+        vista.comboTipoClases.addItemListener(e -> {
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                String tipoClaseSeleccionada = (String) e.getItem();
+                actualizarComboEntrenadoresElegir(tipoClaseSeleccionada);
+            }
+        });
+
+
     }
 
 
@@ -100,7 +108,6 @@ public class Controlador implements ActionListener, ListSelectionListener, ItemL
                 vista.itemConexion.setActionCommand("desconectar");
                 vista.comboClientesRegistrados.setEnabled(true);
                 actualizarComboClientesRegistrados();
-                actualizarComboEntrenadoresElegir();
 
 
                 break;
@@ -195,6 +202,7 @@ public class Controlador implements ActionListener, ListSelectionListener, ItemL
                         Clase clase = new Clase();
                         clase.setNombre(tipoClaseSeleccionada);
                         clase.setEntrenador(entrenadorSeleccionado);
+                        clase.setDescripcion(vista.txtAreaDescripcionClase.getText());
                         modelo.añadirClase(clase);
                     }
                 } else {
@@ -203,15 +211,26 @@ public class Controlador implements ActionListener, ListSelectionListener, ItemL
                 break;
 
             case "modificarClase":
+                Clase claseModificada = (Clase) vista.listClase.getSelectedValue();
+                String nuevoTipoClase = vista.comboTipoClases.getSelectedItem().toString();
+                String nuevoEntrenador = vista.comboEntrenadoresElegir.getSelectedItem().toString();
+                Entrenador entrenador = modelo.obtenerEntrenadorPorNombre(nuevoEntrenador);
+                if (entrenador != null && !entrenador.getEspecialidad().equals(nuevoTipoClase)) {
+                    JOptionPane.showMessageDialog(vista.frame, "El entrenador seleccionado no puede dar la clase de " + nuevoTipoClase + ".", "Error", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    claseModificada.setNombre(nuevoTipoClase);
+                    claseModificada.setEntrenador(entrenador);
+                    claseModificada.setDescripcion(vista.txtAreaDescripcionClase.getText());
+                    modelo.modificarClase(claseModificada);
+                }
+
 
                 break;
             case "eliminarClase":
                 Clase claseAEliminar = (Clase) vista.listClase.getSelectedValue();
                 modelo.eliminarClase(claseAEliminar);
 
-
                 break;
-
 
             case "añadirEntrenador":
                 Entrenador entrenadorNuevo = new Entrenador();
@@ -219,7 +238,6 @@ public class Controlador implements ActionListener, ListSelectionListener, ItemL
                 entrenadorNuevo.setEspecialidad(vista.comboEspecialidadEntrenador.getSelectedItem().toString());
                 entrenadorNuevo.setHorario(vista.txtHorario.getText());
                 modelo.añadirEntrenador(entrenadorNuevo);
-                actualizarComboEntrenadoresElegir();
 
 
                 break;
@@ -241,7 +259,7 @@ public class Controlador implements ActionListener, ListSelectionListener, ItemL
                 Entrenador entrenadorAEliminar = (Entrenador) vista.listEntrenadores.getSelectedValue();
                 Clase claseAEliminarEntrenador = modelo.obtenerClasePorEntrenador(entrenadorAEliminar);
                 if (claseAEliminarEntrenador != null) {
-                    Entrenador entrenador = claseAEliminarEntrenador.getEntrenador();
+                    entrenador = claseAEliminarEntrenador.getEntrenador();
                     if (entrenador != null && entrenador.equals(entrenadorAEliminar) && claseEliminadaConExito) {
                         JOptionPane.showMessageDialog(vista.frame, "No se puede eliminar el entrenador porque tiene clases asignadas.", "Error", JOptionPane.ERROR_MESSAGE);
                     } else {
@@ -276,9 +294,9 @@ public class Controlador implements ActionListener, ListSelectionListener, ItemL
     }
 
 
-    private void actualizarComboEntrenadoresElegir() {
+    private void actualizarComboEntrenadoresElegir(String tipoClase) {
         vista.comboEntrenadoresElegir.removeAllItems();
-        List<Entrenador> entrenadores = modelo.obtenerTodosLosEntrenadores();
+        List<Entrenador> entrenadores = modelo.obtenerEntrenadoresPorEspecialidad(tipoClase);
         for (Entrenador entrenador : entrenadores) {
             vista.comboEntrenadoresElegir.addItem(entrenador.getNombre());
         }

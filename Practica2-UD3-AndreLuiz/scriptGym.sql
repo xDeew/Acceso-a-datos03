@@ -34,9 +34,11 @@ CREATE TABLE `clases` (
   CONSTRAINT `fk_entrenadores_clases` FOREIGN KEY (`id_entrenador`) REFERENCES `entrenadores` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-ALTER TABLE `clases`
-ADD COLUMN `especialidad` ENUM('Aerobico', 'Musculacion', 'Crossfit', 'Yoga', 'Pilates', 'Zumba', 'Gimnasia', 'Spinning') DEFAULT NULL AFTER `nombre`;
 
+ALTER TABLE clases
+MODIFY COLUMN descripcion VARCHAR(10000);
+
+ 
 DROP TABLE IF EXISTS `suscripciones`;
 CREATE TABLE `suscripciones` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,

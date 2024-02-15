@@ -433,20 +433,17 @@
           </grid>
           <grid id="8e3ef" binding="JPanelClases" layout-manager="FormLayout">
             <rowspec value="top:4dlu:noGrow"/>
-            <rowspec value="center:33px:noGrow"/>
+            <rowspec value="center:36px:noGrow"/>
             <rowspec value="top:4dlu:noGrow"/>
-            <rowspec value="center:max(d;4px):noGrow"/>
+            <rowspec value="center:31px:noGrow"/>
             <rowspec value="top:4dlu:noGrow"/>
-            <rowspec value="center:max(d;4px):noGrow"/>
-            <rowspec value="top:5dlu:noGrow"/>
-            <rowspec value="center:max(d;4px):noGrow"/>
-            <rowspec value="top:4dlu:noGrow"/>
-            <rowspec value="center:max(d;4px):noGrow"/>
+            <rowspec value="center:d:grow"/>
             <rowspec value="top:4dlu:noGrow"/>
             <rowspec value="center:max(d;4px):noGrow"/>
             <rowspec value="top:4dlu:noGrow"/>
             <rowspec value="center:max(d;4px):noGrow"/>
             <rowspec value="top:4dlu:noGrow"/>
+            <rowspec value="center:max(d;4px):noGrow"/>
             <rowspec value="center:max(d;4px):noGrow"/>
             <rowspec value="top:55dlu:noGrow"/>
             <colspec value="fill:149px:noGrow"/>
@@ -458,19 +455,9 @@
             <properties/>
             <border type="none"/>
             <children>
-              <component id="190a6" class="javax.swing.JButton" binding="btnAddClase">
-                <constraints>
-                  <grid row="9" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                  <forms/>
-                </constraints>
-                <properties>
-                  <actionCommand value="añadirClase"/>
-                  <text value="Añadir"/>
-                </properties>
-              </component>
               <component id="175ae" class="javax.swing.JButton" binding="btnDeleteClase">
                 <constraints>
-                  <grid row="13" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                  <grid row="11" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                   <forms/>
                 </constraints>
                 <properties>
@@ -480,7 +467,7 @@
               </component>
               <scrollpane id="bed2c">
                 <constraints>
-                  <grid row="9" column="2" row-span="8" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                  <grid row="7" column="2" row-span="7" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                   <forms defaultalign-horz="false" defaultalign-vert="false"/>
                 </constraints>
                 <properties/>
@@ -494,7 +481,7 @@
               </scrollpane>
               <component id="ba668" class="javax.swing.JButton" binding="btnModificarClase">
                 <constraints>
-                  <grid row="11" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                  <grid row="9" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                   <forms/>
                 </constraints>
                 <properties>
@@ -502,18 +489,9 @@
                   <text value="Modificar"/>
                 </properties>
               </component>
-              <component id="1ef00" class="javax.swing.JLabel">
-                <constraints>
-                  <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                  <forms/>
-                </constraints>
-                <properties>
-                  <text value="Entrenador"/>
-                </properties>
-              </component>
               <component id="3327f" class="javax.swing.JComboBox" binding="comboEntrenadoresElegir">
                 <constraints>
-                  <grid row="5" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+                  <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
                   <forms/>
                 </constraints>
                 <properties/>
@@ -524,7 +502,7 @@
                   <forms/>
                 </constraints>
                 <properties>
-                  <text value="Nombre"/>
+                  <text value="Tipo"/>
                 </properties>
               </component>
               <component id="93eb2" class="javax.swing.JComboBox" binding="comboTipoClases">
@@ -533,6 +511,43 @@
                   <forms/>
                 </constraints>
                 <properties/>
+              </component>
+              <component id="1ef00" class="javax.swing.JLabel">
+                <constraints>
+                  <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                  <forms/>
+                </constraints>
+                <properties>
+                  <text value="Entrenador"/>
+                </properties>
+              </component>
+              <component id="190a6" class="javax.swing.JButton" binding="btnAddClase">
+                <constraints>
+                  <grid row="7" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                  <forms/>
+                </constraints>
+                <properties>
+                  <actionCommand value="añadirClase"/>
+                  <text value="Añadir"/>
+                </properties>
+              </component>
+              <component id="1a49e" class="javax.swing.JTextArea" binding="txtAreaDescripcionClase">
+                <constraints>
+                  <grid row="5" column="2" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                    <preferred-size width="150" height="50"/>
+                  </grid>
+                  <forms defaultalign-horz="false" defaultalign-vert="false"/>
+                </constraints>
+                <properties/>
+              </component>
+              <component id="17caa" class="javax.swing.JLabel">
+                <constraints>
+                  <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                  <forms/>
+                </constraints>
+                <properties>
+                  <text value="Descripción"/>
+                </properties>
               </component>
             </children>
           </grid>

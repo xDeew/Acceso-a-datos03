@@ -50,9 +50,9 @@ public class Vista extends JFrame {
     public JList listReservas;
     public JTextField txtPrecio;
     public JComboBox comboEntrenadoresElegir;
-    public JComboBox comboClientesReserva;
 
     public JComboBox comboTipoClases;
+    public JTextArea txtAreaDescripcionClase;
     public DefaultListModel dlmClientes;
     public DefaultListModel dlmSuscripciones;
     public DefaultListModel dlmEntrenadores;

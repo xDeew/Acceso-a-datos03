@@ -1,6 +1,9 @@
 package com.andrelut.gimnasio.gui;
 
-import com.andrelut.gimnasio.*;
+import com.andrelut.gimnasio.Clase;
+import com.andrelut.gimnasio.Cliente;
+import com.andrelut.gimnasio.Entrenador;
+import com.andrelut.gimnasio.Suscripcion;
 import com.andrelut.gimnasio.enums.TipoSuscripcion;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -16,6 +19,7 @@ import java.util.List;
 public class Modelo {
 
     private SessionFactory sessionFactory;
+
     public void desconectar() {
         if (sessionFactory != null && !sessionFactory.isOpen()) {
             sessionFactory.close();
@@ -208,7 +212,6 @@ public class Modelo {
                 session.delete(entrenador);
                 tx.commit();
             } else {
-                System.out.println("El entrenador con el ID proporcionado no existe.");
             }
         } catch (Exception e) {
             if (tx != null) tx.rollback();
@@ -266,4 +269,35 @@ public class Modelo {
     }
 
 
+    public Entrenador obtenerEntrenadorPorNombre(String nuevoEntrenador) {
+        String hql = "FROM Entrenador WHERE nombre = :nombre";
+        try (Session session = sessionFactory.openSession()) {
+            Query<Entrenador> query = session.createQuery(hql, Entrenador.class);
+            query.setParameter("nombre", nuevoEntrenador);
+            return query.uniqueResult();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public void modificarClase(Clase claseModificada) {
+        Session session = abrirSesion();
+        session.beginTransaction();
+        session.saveOrUpdate(claseModificada);
+        session.getTransaction().commit();
+        session.close();
+    }
+
+    public List<Entrenador> obtenerEntrenadoresPorEspecialidad(String especialidad) {
+        String hql = "FROM Entrenador WHERE especialidad = :especialidad";
+        try (Session session = sessionFactory.openSession()) {
+            Query<Entrenador> query = session.createQuery(hql, Entrenador.class);
+            query.setParameter("especialidad", especialidad);
+            return query.list();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ArrayList<>();
+    }
 }

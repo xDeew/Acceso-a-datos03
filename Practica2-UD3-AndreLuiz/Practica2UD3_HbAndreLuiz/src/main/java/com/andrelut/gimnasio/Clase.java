@@ -1,6 +1,5 @@
 package com.andrelut.gimnasio;
 
-import com.andrelut.gimnasio.enums.TipoClase;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -16,6 +15,11 @@ public class Clase {
     @Basic
     @Column(name = "nombre")
     private String nombre;
+
+    @Basic
+    @Column(name = "descripcion")
+    private String descripcion;
+
     @ManyToMany(mappedBy = "clases")
     private List<Entrenador> entrenadores;
 
@@ -48,6 +52,14 @@ public class Clase {
         this.nombre = nombre;
     }
 
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
 
     @Override
     public boolean equals(Object o) {
@@ -63,7 +75,6 @@ public class Clase {
     }
 
 
-
     public List<Entrenador> getEntrenadores() {
         return entrenadores;
     }
@@ -75,8 +86,8 @@ public class Clase {
     @Override
     public String toString() {
         return String.format(
-                "Clase { id=%d, nombre='%s', entrenador='%s'}",
-                id, nombre, entrenador.getNombre(), entrenador.getEspecialidad()
+                "Clase { id=%d, nombre='%s', descripcion='%s', entrenador='%s', especialidad='%s'}",
+                id, nombre, descripcion, entrenador.getNombre(), entrenador.getEspecialidad()
         );
     }
 }
