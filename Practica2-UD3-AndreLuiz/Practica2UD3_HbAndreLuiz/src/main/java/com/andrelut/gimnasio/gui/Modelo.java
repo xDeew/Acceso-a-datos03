@@ -253,8 +253,7 @@ public class Modelo {
         try (Session session = sessionFactory.openSession()) {
             Query<Clase> query = session.createQuery(hql, Clase.class);
             query.setParameter("entrenador", entrenadorAEliminar);
-            // not unique result, return all clases
-
+            return query.uniqueResult();
         } catch (Exception e) {
             e.printStackTrace();
         }

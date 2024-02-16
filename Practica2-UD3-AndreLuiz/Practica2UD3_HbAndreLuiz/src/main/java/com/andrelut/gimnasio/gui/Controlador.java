@@ -269,9 +269,10 @@ public class Controlador implements ActionListener, ListSelectionListener, ItemL
                 Entrenador entrenadorModificado = (Entrenador) vista.listEntrenadores.getSelectedValue();
                 String nuevaEspecialidad = vista.comboEspecialidadEntrenador.getSelectedItem().toString();
                 if (!entrenadorModificado.getEspecialidad().equals(nuevaEspecialidad)) {
-                    claseAEliminar = modelo.obtenerClasePorEntrenador(entrenadorModificado);
-                    if (claseAEliminar != null) {
-                        modelo.eliminarClase(claseAEliminar);
+                    List<Clase> clases = modelo.obtenerClasePorEntrenadorListado(entrenadorModificado);
+                    if (!clases.isEmpty()) {
+                        JOptionPane.showMessageDialog(vista.frame, "El entrenador tiene clases asignadas. Por favor, elimine todas las clases asociadas al entrenador antes de modificarlo.", "Error", JOptionPane.ERROR_MESSAGE);
+                        break;
                     }
                 }
                 entrenadorModificado.setNombre(vista.txtNombreEntrenador.getText());
@@ -281,20 +282,12 @@ public class Controlador implements ActionListener, ListSelectionListener, ItemL
                 break;
             case "eliminarEntrenador":
                 Entrenador entrenadorAEliminar = (Entrenador) vista.listEntrenadores.getSelectedValue();
-                Clase claseAEliminarEntrenador = modelo.obtenerClasePorEntrenador(entrenadorAEliminar);
-                if (claseAEliminarEntrenador != null) {
-                    entrenador = claseAEliminarEntrenador.getEntrenador();
-                    if (entrenador != null && entrenador.equals(entrenadorAEliminar) && claseEliminadaConExito) {
-                        JOptionPane.showMessageDialog(vista.frame, "No se puede eliminar el entrenador porque tiene clases asignadas.", "Error", JOptionPane.ERROR_MESSAGE);
-                    } else {
-                        claseEliminadaConExito = true;
-                        modelo.eliminarEntrenador(entrenadorAEliminar);
-                    }
-                } else {
-                    claseEliminadaConExito = true;
-                    modelo.eliminarEntrenador(entrenadorAEliminar);
+                List<Clase> clases = modelo.obtenerClasePorEntrenadorListado(entrenadorAEliminar);
+                if (!clases.isEmpty()) {
+                    JOptionPane.showMessageDialog(vista.frame, "El entrenador tiene clases asignadas. Por favor, elimine todas las clases asociadas al entrenador antes de eliminarlo.", "Error", JOptionPane.ERROR_MESSAGE);
+                    break;
                 }
-
+                modelo.eliminarEntrenador(entrenadorAEliminar);
                 break;
 
             case "mostrarDetallesEntrenador":
@@ -446,7 +439,7 @@ public class Controlador implements ActionListener, ListSelectionListener, ItemL
                 }
             }
         });
-        
+
         vista.listSuscripciones.getSelectionModel().addListSelectionListener(listener);
         vista.listSuscripciones.addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) {
