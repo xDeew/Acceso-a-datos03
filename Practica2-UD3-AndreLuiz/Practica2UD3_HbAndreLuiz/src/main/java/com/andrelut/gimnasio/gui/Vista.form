@@ -35,6 +35,10 @@
             <rowspec value="center:max(d;4px):noGrow"/>
             <rowspec value="top:4dlu:noGrow"/>
             <rowspec value="center:max(d;4px):noGrow"/>
+            <rowspec value="top:4dlu:noGrow"/>
+            <rowspec value="center:max(d;4px):noGrow"/>
+            <rowspec value="top:4dlu:noGrow"/>
+            <rowspec value="center:max(d;4px):noGrow"/>
             <colspec value="fill:177px:noGrow"/>
             <colspec value="left:4dlu:noGrow"/>
             <colspec value="fill:d:grow"/>
@@ -112,7 +116,7 @@
               </component>
               <scrollpane id="4b3b6">
                 <constraints>
-                  <grid row="8" column="2" row-span="7" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                  <grid row="8" column="2" row-span="11" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                   <forms defaultalign-horz="false" defaultalign-vert="false"/>
                 </constraints>
                 <properties/>
@@ -160,6 +164,16 @@
                 </constraints>
                 <properties/>
               </component>
+              <component id="e6c61" class="javax.swing.JButton" binding="btnMostrarDetallesClientes">
+                <constraints>
+                  <grid row="14" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                  <forms/>
+                </constraints>
+                <properties>
+                  <actionCommand value="mostrarDetallesClientes"/>
+                  <text value="Mostrar detalles "/>
+                </properties>
+              </component>
             </children>
           </grid>
           <grid id="a6b30" binding="JPanelSuscripciones" layout-manager="FormLayout">
@@ -171,6 +185,8 @@
             <rowspec value="top:4dlu:noGrow"/>
             <rowspec value="center:max(d;4px):noGrow"/>
             <rowspec value="top:5dlu:noGrow"/>
+            <rowspec value="center:max(d;4px):noGrow"/>
+            <rowspec value="top:4dlu:noGrow"/>
             <rowspec value="center:max(d;4px):noGrow"/>
             <rowspec value="top:4dlu:noGrow"/>
             <rowspec value="center:max(d;4px):noGrow"/>
@@ -267,7 +283,7 @@
               </component>
               <scrollpane id="dc763">
                 <constraints>
-                  <grid row="8" column="2" row-span="8" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                  <grid row="8" column="2" row-span="10" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                   <forms defaultalign-horz="false" defaultalign-vert="false"/>
                 </constraints>
                 <properties/>
@@ -306,10 +322,22 @@
                 </constraints>
                 <properties/>
               </component>
+              <component id="c7013" class="javax.swing.JButton" binding="btnMostrarDetallesSuscripciones">
+                <constraints>
+                  <grid row="14" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                  <forms/>
+                </constraints>
+                <properties>
+                  <actionCommand value="mostrarDetallesSuscripciones"/>
+                  <text value="Mostrar detalles "/>
+                </properties>
+              </component>
             </children>
           </grid>
           <grid id="67119" binding="JPanelEntrenadores" layout-manager="FormLayout">
             <rowspec value="center:d:noGrow"/>
+            <rowspec value="top:4dlu:noGrow"/>
+            <rowspec value="center:max(d;4px):noGrow"/>
             <rowspec value="top:4dlu:noGrow"/>
             <rowspec value="center:max(d;4px):noGrow"/>
             <rowspec value="top:4dlu:noGrow"/>
@@ -380,7 +408,7 @@
               </component>
               <scrollpane id="e0ae">
                 <constraints>
-                  <grid row="6" column="2" row-span="8" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                  <grid row="6" column="2" row-span="10" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                   <forms defaultalign-horz="false" defaultalign-vert="false"/>
                 </constraints>
                 <properties/>
@@ -429,6 +457,16 @@
                 </constraints>
                 <properties/>
               </component>
+              <component id="b595d" class="javax.swing.JButton" binding="btnMostrarDetallesEntrenador">
+                <constraints>
+                  <grid row="12" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                  <forms/>
+                </constraints>
+                <properties>
+                  <actionCommand value="mostrarDetallesEntrenador"/>
+                  <text value="Mostrar detalles"/>
+                </properties>
+              </component>
             </children>
           </grid>
           <grid id="8e3ef" binding="JPanelClases" layout-manager="FormLayout">
@@ -438,6 +476,8 @@
             <rowspec value="center:31px:noGrow"/>
             <rowspec value="top:4dlu:noGrow"/>
             <rowspec value="center:d:grow"/>
+            <rowspec value="top:4dlu:noGrow"/>
+            <rowspec value="center:max(d;4px):noGrow"/>
             <rowspec value="top:4dlu:noGrow"/>
             <rowspec value="center:max(d;4px):noGrow"/>
             <rowspec value="top:4dlu:noGrow"/>
@@ -467,7 +507,7 @@
               </component>
               <scrollpane id="bed2c">
                 <constraints>
-                  <grid row="7" column="2" row-span="7" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                  <grid row="7" column="2" row-span="9" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                   <forms defaultalign-horz="false" defaultalign-vert="false"/>
                 </constraints>
                 <properties/>
@@ -547,6 +587,16 @@
                 </constraints>
                 <properties>
                   <text value="Descripción"/>
+                </properties>
+              </component>
+              <component id="2659d" class="javax.swing.JButton" binding="btnMostrarDetallesClases">
+                <constraints>
+                  <grid row="13" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                  <forms/>
+                </constraints>
+                <properties>
+                  <actionCommand value="mostrarDetallesClases"/>
+                  <text value="Mostrar detalles "/>
                 </properties>
               </component>
             </children>

@@ -52,8 +52,6 @@ public class Controlador implements ActionListener, ListSelectionListener, ItemL
                 actualizarComboEntrenadoresElegir(tipoClaseSeleccionada);
             }
         });
-
-
     }
 
 
@@ -77,6 +75,10 @@ public class Controlador implements ActionListener, ListSelectionListener, ItemL
         vista.btnModificarClase.addActionListener(listener);
         vista.btnDeleteClase.addActionListener(listener);
 
+        vista.btnMostrarDetallesEntrenador.addActionListener(listener);
+        vista.btnMostrarDetallesClientes.addActionListener(listener);
+        vista.btnMostrarDetallesSuscripciones.addActionListener(listener);
+        vista.btnMostrarDetallesClases.addActionListener(listener);
 
     }
 
@@ -145,8 +147,16 @@ public class Controlador implements ActionListener, ListSelectionListener, ItemL
 
                 break;
 
+            case "mostrarDetallesClientes":
+                Cliente clienteSeleccionado = (Cliente) vista.listClientes.getSelectedValue();
+                if (clienteSeleccionado != null) {
+                    JOptionPane.showMessageDialog(vista.frame, "Nombre: " + clienteSeleccionado.getNombre() + "\nDirección: " + clienteSeleccionado.getDireccion() + "\nTeléfono: " + clienteSeleccionado.getTelefono() + "\nEmail: " + clienteSeleccionado.getEmail(), "Detalles del cliente", JOptionPane.INFORMATION_MESSAGE);
+                }
+                break;
+
+
             case "añadirSuscripcion":
-                Cliente clienteSeleccionado = (Cliente) vista.comboClientesRegistrados.getSelectedItem();
+                clienteSeleccionado = (Cliente) vista.comboClientesRegistrados.getSelectedItem();
                 if (clienteSeleccionado != null) {
                     ArrayList<Suscripcion> suscripciones = modelo.getSuscripciones();
                     boolean clienteYaTieneSuscripcion = suscripciones.stream()
@@ -183,6 +193,13 @@ public class Controlador implements ActionListener, ListSelectionListener, ItemL
                 modelo.eliminarSuscripcion(idSuscripcion);
 
 
+                break;
+
+            case "mostrarDetallesSuscripciones":
+                Suscripcion suscripcionSeleccionada = (Suscripcion) vista.listSuscripciones.getSelectedValue();
+                if (suscripcionSeleccionada != null) {
+                    JOptionPane.showMessageDialog(vista.frame, "Cliente: " + suscripcionSeleccionada.getCliente().getNombre() + "\nTipo: " + suscripcionSeleccionada.getTipo() + "\nDuración: " + suscripcionSeleccionada.getDuracion() + " meses\nPrecio: " + suscripcionSeleccionada.getCosto() + "€", "Detalles de la suscripción", JOptionPane.INFORMATION_MESSAGE);
+                }
                 break;
 
             case "añadirClase":
@@ -232,6 +249,13 @@ public class Controlador implements ActionListener, ListSelectionListener, ItemL
 
                 break;
 
+            case "mostrarDetallesClases":
+                Clase claseSeleccionada = (Clase) vista.listClase.getSelectedValue();
+                if (claseSeleccionada != null) {
+                    JOptionPane.showMessageDialog(vista.frame, "Tipo: " + claseSeleccionada.getNombre() + "\nEntrenador: " + claseSeleccionada.getEntrenador().getNombre() + "\nDescripción: " + claseSeleccionada.getDescripcion(), "Detalles de la clase", JOptionPane.INFORMATION_MESSAGE);
+                }
+                break;
+
             case "añadirEntrenador":
                 Entrenador entrenadorNuevo = new Entrenador();
                 entrenadorNuevo.setNombre(vista.txtNombreEntrenador.getText());
@@ -271,6 +295,13 @@ public class Controlador implements ActionListener, ListSelectionListener, ItemL
                     modelo.eliminarEntrenador(entrenadorAEliminar);
                 }
 
+                break;
+
+            case "mostrarDetallesEntrenador":
+                entrenadorSeleccionado = (Entrenador) vista.listEntrenadores.getSelectedValue();
+                if (entrenadorSeleccionado != null) {
+                    JOptionPane.showMessageDialog(vista.frame, "Nombre: " + entrenadorSeleccionado.getNombre() + "\nEspecialidad: " + entrenadorSeleccionado.getEspecialidad() + "\nHorario: " + entrenadorSeleccionado.getHorario(), "Detalles del entrenador", JOptionPane.INFORMATION_MESSAGE);
+                }
                 break;
 
         }
@@ -376,9 +407,58 @@ public class Controlador implements ActionListener, ListSelectionListener, ItemL
 
     private void addListSelectionListener(ListSelectionListener listener) {
         vista.listClientes.getSelectionModel().addListSelectionListener(listener);
+        vista.listClientes.addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting()) {
+                Cliente clienteSeleccionado = (Cliente) vista.listClientes.getSelectedValue();
+                if (clienteSeleccionado != null) {
+                    Suscripcion suscripcion = clienteSeleccionado.getSuscripcion();
+                    if (suscripcion != null) {
+                        JOptionPane.showMessageDialog(vista.frame, "Detalles de la suscripción: \nTipo: " + suscripcion.getTipo() + "\nDuración: " + suscripcion.getDuracion() + "\nCosto: " + suscripcion.getCosto(), "Información de Suscripción", JOptionPane.INFORMATION_MESSAGE);
+                    }
+                }
+            }
+        });
+
+
         vista.listClase.getSelectionModel().addListSelectionListener(listener);
+        vista.listClase.addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting()) {
+                Clase claseSeleccionada = (Clase) vista.listClase.getSelectedValue();
+                if (claseSeleccionada != null) {
+                    Entrenador entrenador = claseSeleccionada.getEntrenador();
+                    if (entrenador != null) {
+                        JOptionPane.showMessageDialog(vista.frame, "Detalles del entrenador: \nNombre: " + entrenador.getNombre() + "\nEspecialidad: " + entrenador.getEspecialidad() + "\nHorario: " + entrenador.getHorario(), "Información de Entrenador", JOptionPane.INFORMATION_MESSAGE);
+                    }
+                }
+            }
+        });
         vista.listEntrenadores.getSelectionModel().addListSelectionListener(listener);
+        vista.listEntrenadores.addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting()) {
+                Entrenador entrenadorSeleccionado = (Entrenador) vista.listEntrenadores.getSelectedValue();
+                if (entrenadorSeleccionado != null) {
+                    List<Clase> clases = modelo.obtenerClasePorEntrenadorListado(entrenadorSeleccionado);
+                    if (clases != null && !clases.isEmpty()) {
+                        JOptionPane.showMessageDialog(vista.frame, "Detalles de las clases: \nTipo: " + clases.get(0).getNombre() + "\nDescripción: " + clases.get(0).getDescripcion(), "Información de Clase", JOptionPane.INFORMATION_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(vista.frame, "El entrenador no tiene clases asignadas.", "Información de Clase", JOptionPane.INFORMATION_MESSAGE);
+                    }
+                }
+            }
+        });
+        
         vista.listSuscripciones.getSelectionModel().addListSelectionListener(listener);
+        vista.listSuscripciones.addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting()) {
+                Suscripcion suscripcionSeleccionada = (Suscripcion) vista.listSuscripciones.getSelectedValue();
+                if (suscripcionSeleccionada != null) {
+                    Cliente cliente = suscripcionSeleccionada.getCliente();
+                    if (cliente != null) {
+                        JOptionPane.showMessageDialog(vista.frame, "Detalles del cliente: \nNombre: " + cliente.getNombre() + "\nDirección: " + cliente.getDireccion() + "\nTeléfono: " + cliente.getTelefono() + "\nEmail: " + cliente.getEmail(), "Información de Cliente", JOptionPane.INFORMATION_MESSAGE);
+                    }
+                }
+            }
+        });
 
 
     }
@@ -411,6 +491,8 @@ public class Controlador implements ActionListener, ListSelectionListener, ItemL
             if (clase != null) {
                 vista.comboTipoClases.setSelectedItem(clase.getNombre());
                 vista.comboEntrenadoresElegir.setSelectedItem(clase.getEntrenador().getNombre());
+                vista.txtAreaDescripcionClase.setText("");
+                vista.txtAreaDescripcionClase.append(clase.getDescripcion());
 
             }
         }

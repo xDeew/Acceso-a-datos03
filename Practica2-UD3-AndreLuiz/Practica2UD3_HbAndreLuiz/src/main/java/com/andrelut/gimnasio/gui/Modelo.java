@@ -253,11 +253,24 @@ public class Modelo {
         try (Session session = sessionFactory.openSession()) {
             Query<Clase> query = session.createQuery(hql, Clase.class);
             query.setParameter("entrenador", entrenadorAEliminar);
-            return query.uniqueResult();
+            // not unique result, return all clases
+
         } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public List<Clase> obtenerClasePorEntrenadorListado(Entrenador entrenadorAEliminar) {
+        String hql = "FROM Clase WHERE entrenador = :entrenador";
+        try (Session session = sessionFactory.openSession()) {
+            Query<Clase> query = session.createQuery(hql, Clase.class);
+            query.setParameter("entrenador", entrenadorAEliminar);
+            return query.list();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ArrayList<>();
     }
 
     public void modificarEntrenador(Entrenador entrenadorModificado) {
