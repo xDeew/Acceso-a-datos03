@@ -13,6 +13,7 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +22,7 @@ public class Modelo {
     private SessionFactory sessionFactory;
 
     public void desconectar() {
-        if (sessionFactory != null && !sessionFactory.isOpen()) {
+        if (sessionFactory != null && sessionFactory.isOpen()) {
             sessionFactory.close();
         }
     }
@@ -46,35 +47,55 @@ public class Modelo {
 
 
     public Session abrirSesion() {
-        return sessionFactory.openSession();
+        if (estaConectado()) {
+            return sessionFactory.openSession();
+        } else {
+            return null;
+        }
     }
 
     ArrayList<Cliente> getClientes() {
         Session session = abrirSesion();
-        ArrayList<Cliente> clientes = (ArrayList<Cliente>) session.createQuery("from Cliente").list();
-        session.close();
-        return clientes;
+        if (session != null) {
+            ArrayList<Cliente> clientes = (ArrayList<Cliente>) session.createQuery("from Cliente").list();
+            session.close();
+            return clientes;
+        } else {
+            return new ArrayList<>();
+        }
     }
 
     ArrayList<Suscripcion> getSuscripciones() {
         Session session = abrirSesion();
-        ArrayList<Suscripcion> suscripciones = (ArrayList<Suscripcion>) session.createQuery("from Suscripcion").list();
-        session.close();
-        return suscripciones;
+        if (session != null) {
+            ArrayList<Suscripcion> suscripciones = (ArrayList<Suscripcion>) session.createQuery("from Suscripcion").list();
+            session.close();
+            return suscripciones;
+        } else {
+            return new ArrayList<>();
+        }
     }
 
     ArrayList<Clase> getClases() {
         Session session = abrirSesion();
-        ArrayList<Clase> clases = (ArrayList<Clase>) session.createQuery("from Clase").list();
-        session.close();
-        return clases;
+        if (session != null) {
+            ArrayList<Clase> clases = (ArrayList<Clase>) session.createQuery("from Clase").list();
+            session.close();
+            return clases;
+        } else {
+            return new ArrayList<>();
+        }
     }
 
     ArrayList<Entrenador> getEntrenadores() {
         Session session = abrirSesion();
-        ArrayList<Entrenador> entrenadores = (ArrayList<Entrenador>) session.createQuery("from Entrenador").list();
-        session.close();
-        return entrenadores;
+        if (session != null) {
+            ArrayList<Entrenador> entrenadores = (ArrayList<Entrenador>) session.createQuery("from Entrenador").list();
+            session.close();
+            return entrenadores;
+        } else {
+            return new ArrayList<>();
+        }
     }
 
 
