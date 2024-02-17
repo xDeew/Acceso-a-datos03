@@ -87,7 +87,7 @@
                   <forms/>
                 </constraints>
                 <properties>
-                  <actionCommand value="añadirCliente"/>
+                  <actionCommand value="addCliente"/>
                   <text value="Añadir"/>
                 </properties>
               </component>
@@ -250,7 +250,7 @@
                   <forms/>
                 </constraints>
                 <properties>
-                  <actionCommand value="añadirSuscripcion"/>
+                  <actionCommand value="addSuscripcion"/>
                   <text value="Añadir"/>
                 </properties>
               </component>
@@ -417,7 +417,7 @@
                   <forms/>
                 </constraints>
                 <properties>
-                  <actionCommand value="añadirEntrenador"/>
+                  <actionCommand value="addEntrenador"/>
                   <text value="Añadir"/>
                 </properties>
               </component>
@@ -558,7 +558,7 @@
                   <forms/>
                 </constraints>
                 <properties>
-                  <actionCommand value="añadirClase"/>
+                  <actionCommand value="addClase"/>
                   <text value="Añadir"/>
                 </properties>
               </component>

@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"com.andrelut.gimnasio"},{"l":"com.andrelut.gimnasio.enums"},{"l":"com.andrelut.gimnasio.gui"}]

@@ -85,7 +85,9 @@ public class Vista extends JFrame {
 
     }
 
-
+    /**
+     * Establece los modelos de las listas
+     */
     private void setListModels() {
         dlmClientes = new DefaultListModel();
         listClientes.setModel(dlmClientes);

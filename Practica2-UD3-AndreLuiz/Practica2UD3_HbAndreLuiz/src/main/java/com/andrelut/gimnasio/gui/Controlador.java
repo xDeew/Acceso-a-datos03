@@ -12,18 +12,29 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class Controlador implements ActionListener, ListSelectionListener, ItemListener {
+public class Controlador implements ActionListener, ListSelectionListener {
     private final Vista vista;
     private final Modelo modelo;
     private boolean conectado;
-    private boolean claseEliminadaConExito;
 
-
+    /**
+     * Constructor de la clase Controlador
+     * <p>
+     * Inicializa la vista y el modelo
+     * <p>
+     * Añade los action listeners a los botones
+     * <p>
+     * Añade los list selection listeners a las listas
+     * <p>
+     * Añade los item listeners a los combos
+     *
+     * @param modelo
+     * @param vista
+     */
     public Controlador(Modelo modelo, Vista vista) {
         this.vista = vista;
         this.modelo = modelo;
@@ -35,6 +46,9 @@ public class Controlador implements ActionListener, ListSelectionListener, ItemL
 
     }
 
+    /**
+     * Añade los item listeners a los combos
+     */
     private void addItemListeners() {
         vista.comboTipoSuscripcion.addItemListener(e -> {
             if (e.getStateChange() == ItemEvent.SELECTED) {
@@ -55,6 +69,11 @@ public class Controlador implements ActionListener, ListSelectionListener, ItemL
     }
 
 
+    /**
+     * Añade los action listeners a los botones
+     *
+     * @param listener
+     */
     private void addActionListeners(ActionListener listener) {
         vista.itemConexion.addActionListener(listener);
         vista.itemSalir.addActionListener(listener);
@@ -82,6 +101,11 @@ public class Controlador implements ActionListener, ListSelectionListener, ItemL
 
     }
 
+    /**
+     * Procesa los eventos de acción de los botones
+     *
+     * @param e the event to be processed
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         String comando = e.getActionCommand();
@@ -116,7 +140,7 @@ public class Controlador implements ActionListener, ListSelectionListener, ItemL
             case "salir":
                 System.exit(0);
                 break;
-            case "añadirCliente":
+            case "addCliente":
 
                 Cliente cliente = new Cliente();
                 cliente.setNombre(vista.txtNombreCliente.getText());
@@ -126,7 +150,8 @@ public class Controlador implements ActionListener, ListSelectionListener, ItemL
                 if (modelo.existeEmail(cliente.getEmail())) {
                     JOptionPane.showMessageDialog(vista.frame, "El email ya existe. Por favor, introduce un email diferente.", "Error", JOptionPane.ERROR_MESSAGE);
                 } else {
-                    modelo.añadirCliente(cliente);
+                    modelo.addCliente(cliente);
+                    JOptionPane.showMessageDialog(vista.frame, "Cliente añadido con éxito.");
                     actualizarComboClientesRegistrados();
 
                 }
@@ -138,11 +163,13 @@ public class Controlador implements ActionListener, ListSelectionListener, ItemL
                 clienteModificado.setTelefono(vista.txtTelefono.getText());
                 clienteModificado.setEmail(vista.txtEmail.getText());
                 modelo.modificarCliente(clienteModificado);
+                JOptionPane.showMessageDialog(vista.frame, "Cliente modificado con éxito.");
 
                 break;
             case "eliminarCliente":
                 Cliente clienteAEliminar = (Cliente) vista.listClientes.getSelectedValue();
                 modelo.eliminarCliente(clienteAEliminar.getId());
+                JOptionPane.showMessageDialog(vista.frame, "Cliente eliminado con éxito.");
 
 
                 break;
@@ -155,7 +182,7 @@ public class Controlador implements ActionListener, ListSelectionListener, ItemL
                 break;
 
 
-            case "añadirSuscripcion":
+            case "addSuscripcion":
                 clienteSeleccionado = (Cliente) vista.comboClientesRegistrados.getSelectedItem();
                 if (clienteSeleccionado != null) {
                     ArrayList<Suscripcion> suscripciones = modelo.getSuscripciones();
@@ -171,7 +198,8 @@ public class Controlador implements ActionListener, ListSelectionListener, ItemL
                         suscripcion.setCosto(Double.parseDouble(vista.txtPrecio.getText()));
                         suscripcion.setCliente(clienteSeleccionado);
 
-                        modelo.añadirSuscripcion(suscripcion);
+                        modelo.addSuscripcion(suscripcion);
+                        JOptionPane.showMessageDialog(vista.frame, "Suscripción añadida con éxito.");
                     }
                 } else {
                     JOptionPane.showMessageDialog(vista.frame, "No hay clientes registrados. Por favor, añade un cliente antes de continuar.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -191,8 +219,8 @@ public class Controlador implements ActionListener, ListSelectionListener, ItemL
             case "eliminarSuscripcion":
                 int idSuscripcion = obtenerIdSuscripcionSeleccionada();
                 modelo.eliminarSuscripcion(idSuscripcion);
-
-
+                JOptionPane.showMessageDialog(vista.frame, "Suscripción eliminada con éxito.");
+                limpiarCamposSuscripciones();
                 break;
 
             case "mostrarDetallesSuscripciones":
@@ -202,7 +230,7 @@ public class Controlador implements ActionListener, ListSelectionListener, ItemL
                 }
                 break;
 
-            case "añadirClase":
+            case "addClase":
                 String entrenadorSeleccionadoNombre = (String) vista.comboEntrenadoresElegir.getSelectedItem();
                 Entrenador entrenadorSeleccionado = null;
                 for (Entrenador entrenador : modelo.getEntrenadores()) {
@@ -220,7 +248,8 @@ public class Controlador implements ActionListener, ListSelectionListener, ItemL
                         clase.setNombre(tipoClaseSeleccionada);
                         clase.setEntrenador(entrenadorSeleccionado);
                         clase.setDescripcion(vista.txtAreaDescripcionClase.getText());
-                        modelo.añadirClase(clase);
+                        modelo.addClase(clase);
+                        JOptionPane.showMessageDialog(vista.frame, "Clase añadida con éxito.");
                     }
                 } else {
                     JOptionPane.showMessageDialog(vista.frame, "Por favor, selecciona un entrenador y un tipo de clase.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -239,6 +268,7 @@ public class Controlador implements ActionListener, ListSelectionListener, ItemL
                     claseModificada.setEntrenador(entrenador);
                     claseModificada.setDescripcion(vista.txtAreaDescripcionClase.getText());
                     modelo.modificarClase(claseModificada);
+                    JOptionPane.showMessageDialog(vista.frame, "Clase modificada con éxito.");
                 }
 
 
@@ -246,6 +276,8 @@ public class Controlador implements ActionListener, ListSelectionListener, ItemL
             case "eliminarClase":
                 Clase claseAEliminar = (Clase) vista.listClase.getSelectedValue();
                 modelo.eliminarClase(claseAEliminar);
+                limpiarCamposClase();
+                JOptionPane.showMessageDialog(vista.frame, "Clase eliminada con éxito.");
 
                 break;
 
@@ -256,12 +288,13 @@ public class Controlador implements ActionListener, ListSelectionListener, ItemL
                 }
                 break;
 
-            case "añadirEntrenador":
+            case "addEntrenador":
                 Entrenador entrenadorNuevo = new Entrenador();
                 entrenadorNuevo.setNombre(vista.txtNombreEntrenador.getText());
                 entrenadorNuevo.setEspecialidad(vista.comboEspecialidadEntrenador.getSelectedItem().toString());
                 entrenadorNuevo.setHorario(vista.txtHorario.getText());
-                modelo.añadirEntrenador(entrenadorNuevo);
+                modelo.addEntrenador(entrenadorNuevo);
+                JOptionPane.showMessageDialog(vista.frame, "Entrenador añadido con éxito.");
 
 
                 break;
@@ -279,6 +312,7 @@ public class Controlador implements ActionListener, ListSelectionListener, ItemL
                 entrenadorModificado.setEspecialidad(nuevaEspecialidad);
                 entrenadorModificado.setHorario(vista.txtHorario.getText());
                 modelo.modificarEntrenador(entrenadorModificado);
+                JOptionPane.showMessageDialog(vista.frame, "Entrenador modificado con éxito.");
                 break;
             case "eliminarEntrenador":
                 Entrenador entrenadorAEliminar = (Entrenador) vista.listEntrenadores.getSelectedValue();
@@ -288,6 +322,7 @@ public class Controlador implements ActionListener, ListSelectionListener, ItemL
                     break;
                 }
                 modelo.eliminarEntrenador(entrenadorAEliminar);
+                JOptionPane.showMessageDialog(vista.frame, "Entrenador eliminado con éxito.");
                 break;
 
             case "mostrarDetallesEntrenador":
@@ -304,11 +339,19 @@ public class Controlador implements ActionListener, ListSelectionListener, ItemL
     }
 
 
+    /**
+     * Obtiene el id de la suscripción seleccionada
+     *
+     * @return el id de la suscripción seleccionada
+     */
     private int obtenerIdSuscripcionSeleccionada() {
         Suscripcion suscripcionSeleccionada = (Suscripcion) vista.listSuscripciones.getSelectedValue();
         return suscripcionSeleccionada.getId();
     }
 
+    /**
+     * Actualiza el combo de clientes registrados
+     */
     private void actualizarComboClientesRegistrados() {
         vista.comboClientesRegistrados.removeAllItems();
         ArrayList<Cliente> clientes = modelo.getClientes();
@@ -317,15 +360,26 @@ public class Controlador implements ActionListener, ListSelectionListener, ItemL
         }
     }
 
-
+    /**
+     * Actualiza el combo de entrenadores a elegir
+     *
+     * @param tipoClase
+     */
     private void actualizarComboEntrenadoresElegir(String tipoClase) {
-        vista.comboEntrenadoresElegir.removeAllItems();
-        List<Entrenador> entrenadores = modelo.obtenerEntrenadoresPorEspecialidad(tipoClase);
-        for (Entrenador entrenador : entrenadores) {
-            vista.comboEntrenadoresElegir.addItem(entrenador.getNombre());
+        try {
+            vista.comboEntrenadoresElegir.removeAllItems();
+            List<Entrenador> entrenadores = modelo.obtenerEntrenadoresPorEspecialidad(tipoClase);
+            for (Entrenador entrenador : entrenadores) {
+                vista.comboEntrenadoresElegir.addItem(entrenador.getNombre());
+            }
+        } catch (Exception e) {
+            // No hacer nada para que no muestra el error
         }
     }
 
+    /**
+     * Limpia los campos de los formularios
+     */
     private void limpiarCampos() {
         limpiarCamposCliente();
         limpiarCamposSuscripciones();
@@ -333,19 +387,27 @@ public class Controlador implements ActionListener, ListSelectionListener, ItemL
         limpiarCamposEntrenador();
     }
 
-
+    /**
+     * Limpia los campos del formulario de entrenador
+     */
     private void limpiarCamposEntrenador() {
         vista.txtNombreEntrenador.setText("");
         vista.comboEspecialidadEntrenador.setSelectedIndex(-1);
         vista.txtHorario.setText("");
     }
 
+    /**
+     * Limpia los campos del formulario de clase
+     */
     private void limpiarCamposClase() {
         vista.comboTipoClases.setSelectedIndex(-1);
         vista.comboEntrenadoresElegir.setSelectedIndex(-1);
         vista.txtAreaDescripcionClase.setText("");
     }
 
+    /**
+     * Limpia los campos del formulario de suscripciones
+     */
     private void limpiarCamposSuscripciones() {
         vista.comboTipoSuscripcion.setSelectedIndex(-1);
         vista.comboClientesRegistrados.setSelectedIndex(-1);
@@ -353,6 +415,9 @@ public class Controlador implements ActionListener, ListSelectionListener, ItemL
         vista.txtPrecio.setText("");
     }
 
+    /**
+     * Limpia los campos del formulario de cliente
+     */
     private void limpiarCamposCliente() {
         vista.txtNombreCliente.setText("");
         vista.txtDireccion.setText("");
@@ -360,7 +425,9 @@ public class Controlador implements ActionListener, ListSelectionListener, ItemL
         vista.txtEmail.setText("");
     }
 
-
+    /**
+     * Actualiza las listas de la vista
+     */
     private void actualizar() {
         listarClientes(modelo.getClientes());
         listarSuscripciones(modelo.getSuscripciones());
@@ -368,7 +435,11 @@ public class Controlador implements ActionListener, ListSelectionListener, ItemL
         listarClases(modelo.getClases());
     }
 
-
+    /**
+     * Lista las clases en la vista
+     *
+     * @param clases
+     */
     private void listarClases(ArrayList<Clase> clases) {
         vista.dlmClases.clear();
         for (Clase clase : clases) {
@@ -376,6 +447,11 @@ public class Controlador implements ActionListener, ListSelectionListener, ItemL
         }
     }
 
+    /**
+     * Lista las suscripciones en la vista
+     *
+     * @param suscripciones
+     */
     private void listarSuscripciones(ArrayList<Suscripcion> suscripciones) {
         vista.dlmSuscripciones.clear();
         for (Suscripcion suscripcion : suscripciones) {
@@ -383,6 +459,11 @@ public class Controlador implements ActionListener, ListSelectionListener, ItemL
         }
     }
 
+    /**
+     * Lista los entrenadores en la vista
+     *
+     * @param entrenadores
+     */
     private void listarEntrenadores(ArrayList<Entrenador> entrenadores) {
         vista.dlmEntrenadores.clear();
         for (Entrenador entrenador : entrenadores) {
@@ -390,6 +471,11 @@ public class Controlador implements ActionListener, ListSelectionListener, ItemL
         }
     }
 
+    /**
+     * Lista los clientes en la vista
+     *
+     * @param clientes
+     */
     private void listarClientes(ArrayList<Cliente> clientes) {
         vista.dlmClientes.clear();
         for (Cliente cliente : clientes) {
@@ -398,6 +484,11 @@ public class Controlador implements ActionListener, ListSelectionListener, ItemL
 
     }
 
+    /**
+     * Añade un ListSelectionListener a las listas
+     *
+     * @param listener
+     */
     private void addListSelectionListener(ListSelectionListener listener) {
         vista.listClientes.getSelectionModel().addListSelectionListener(listener);
         vista.listClientes.addListSelectionListener(e -> {
@@ -456,7 +547,11 @@ public class Controlador implements ActionListener, ListSelectionListener, ItemL
 
     }
 
-
+    /**
+     * Procesa los cambios en la selección de las listas
+     *
+     * @param e the event that characterizes the change.
+     */
     @Override
     public void valueChanged(ListSelectionEvent e) {
         if (!e.getValueIsAdjusting()) {
@@ -491,8 +586,4 @@ public class Controlador implements ActionListener, ListSelectionListener, ItemL
         }
     }
 
-    @Override
-    public void itemStateChanged(ItemEvent e) {
-
-    }
 }
