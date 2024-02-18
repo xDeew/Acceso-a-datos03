@@ -313,18 +313,16 @@ public class Modelo {
             tx = session.beginTransaction();
             Entrenador entrenador = session.get(Entrenador.class, entrenadorAEliminar.getId());
             if (entrenador != null) {
-                List<Clase> clases = new ArrayList<>(entrenador.getClases());
-                for (Clase clase : clases) {
-                    session.delete(clase);
-                }
                 session.delete(entrenador);
                 tx.commit();
             } else {
+                System.out.println("El entrenador con el ID proporcionado no existe.");
             }
         } catch (Exception e) {
             if (tx != null) tx.rollback();
             e.printStackTrace();
         }
+
     }
 
 

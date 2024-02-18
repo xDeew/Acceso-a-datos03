@@ -49,12 +49,4 @@ CREATE TABLE `suscripciones` (
   UNIQUE KEY `id_cliente` (`id_cliente`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-DROP TABLE IF EXISTS `entrenador_clase`;
-CREATE TABLE `entrenador_clase` (
-  `id_entrenador` INT(10) UNSIGNED NOT NULL,
-  `id_clase` INT(10) UNSIGNED NOT NULL,
-  PRIMARY KEY (`id_entrenador`, `id_clase`),
-  CONSTRAINT `fk_entrenador_clase_entrenadores` FOREIGN KEY (`id_entrenador`) REFERENCES `entrenadores` (`id`),
-  CONSTRAINT `fk_entrenador_clase_clases` FOREIGN KEY (`id_clase`) REFERENCES `clases` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 

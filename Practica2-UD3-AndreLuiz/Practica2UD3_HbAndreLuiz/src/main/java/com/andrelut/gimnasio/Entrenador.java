@@ -22,15 +22,12 @@ public class Entrenador {
     @Basic
     @Column(name = "horario")
     private String horario;
-    @ManyToMany
-    @JoinTable(name = "entrenador_clase", catalog = "", schema = "gimnasiodb", joinColumns = @JoinColumn(name = "id_entrenador", referencedColumnName = "id", nullable = false), inverseJoinColumns = @JoinColumn(name = "id_clase", referencedColumnName = "id", nullable = false))
-    private List<Clase> clases;
+
 
 
     public int getId() {
         return id;
     }
-
 
 
     public void setId(int id) {
@@ -72,14 +69,6 @@ public class Entrenador {
     @Override
     public int hashCode() {
         return Objects.hash(id, nombre, especialidad, horario);
-    }
-
-    public List<Clase> getClases() {
-        return clases;
-    }
-
-    public void setClases(List<Clase> clases) {
-        this.clases = clases;
     }
 
     @Override

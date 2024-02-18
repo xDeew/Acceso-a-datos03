@@ -2,7 +2,6 @@ package com.andrelut.gimnasio;
 
 import jakarta.persistence.*;
 
-import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -20,8 +19,6 @@ public class Clase {
     @Column(name = "descripcion")
     private String descripcion;
 
-    @ManyToMany(mappedBy = "clases")
-    private List<Entrenador> entrenadores;
 
     @ManyToOne
     @JoinColumn(name = "id_entrenador", referencedColumnName = "id")
@@ -74,14 +71,6 @@ public class Clase {
         return Objects.hash(id, nombre);
     }
 
-
-    public List<Entrenador> getEntrenadores() {
-        return entrenadores;
-    }
-
-    public void setEntrenadores(List<Entrenador> entrenadores) {
-        this.entrenadores = entrenadores;
-    }
 
     @Override
     public String toString() {

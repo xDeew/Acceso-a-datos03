@@ -291,12 +291,18 @@ public class Controlador implements ActionListener, ListSelectionListener {
             case "addEntrenador":
                 Entrenador entrenadorNuevo = new Entrenador();
                 entrenadorNuevo.setNombre(vista.txtNombreEntrenador.getText());
-                entrenadorNuevo.setEspecialidad(vista.comboEspecialidadEntrenador.getSelectedItem().toString());
                 entrenadorNuevo.setHorario(vista.txtHorario.getText());
-                modelo.addEntrenador(entrenadorNuevo);
-                JOptionPane.showMessageDialog(vista.frame, "Entrenador añadido con éxito.");
 
+                if (vista.comboEspecialidadEntrenador.getSelectedIndex() != -1) {
+                    entrenadorNuevo.setEspecialidad(vista.comboEspecialidadEntrenador.getSelectedItem().toString());
+                }
 
+                if (!entrenadorNuevo.getNombre().isEmpty() && !entrenadorNuevo.getHorario().isEmpty() && entrenadorNuevo.getEspecialidad() != null) {
+                    modelo.addEntrenador(entrenadorNuevo);
+                    JOptionPane.showMessageDialog(vista.frame, "Entrenador añadido con éxito.");
+                } else {
+                    JOptionPane.showMessageDialog(vista.frame, "Por favor, rellena todos los campos.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
                 break;
             case "modificarEntrenador":
                 Entrenador entrenadorModificado = (Entrenador) vista.listEntrenadores.getSelectedValue();
