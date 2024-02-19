@@ -341,8 +341,12 @@
             <rowspec value="center:max(d;4px):noGrow"/>
             <rowspec value="top:4dlu:noGrow"/>
             <rowspec value="center:max(d;4px):noGrow"/>
+            <rowspec value="top:4dlu:noGrow"/>
+            <rowspec value="center:max(d;4px):noGrow"/>
             <rowspec value="top:5dlu:noGrow"/>
             <rowspec value="center:max(d;4px):noGrow"/>
+            <rowspec value="top:4dlu:noGrow"/>
+            <rowspec value="center:d:grow"/>
             <colspec value="fill:137px:noGrow"/>
             <colspec value="left:4dlu:noGrow"/>
             <colspec value="fill:d:grow"/>
@@ -399,7 +403,7 @@
               </component>
               <scrollpane id="e0ae">
                 <constraints>
-                  <grid row="6" column="2" row-span="8" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                  <grid row="6" column="2" row-span="10" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                   <forms defaultalign-horz="false" defaultalign-vert="false"/>
                 </constraints>
                 <properties/>
@@ -456,6 +460,25 @@
                 <properties>
                   <actionCommand value="mostrarDetallesEntrenador"/>
                   <text value="Mostrar detalles"/>
+                </properties>
+              </component>
+              <component id="bd71a" class="javax.swing.JTextArea" binding="txtAreaEntrenadorVerClase">
+                <constraints>
+                  <grid row="18" column="2" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                    <preferred-size width="150" height="50"/>
+                  </grid>
+                  <forms defaultalign-horz="false" defaultalign-vert="false"/>
+                </constraints>
+                <properties/>
+              </component>
+              <component id="df39b" class="javax.swing.JButton" binding="btnVerClasesEntrenador">
+                <constraints>
+                  <grid row="18" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                  <forms/>
+                </constraints>
+                <properties>
+                  <actionCommand value="verClasesEntrenador"/>
+                  <text value="Ver clases"/>
                 </properties>
               </component>
             </children>

@@ -98,6 +98,7 @@ public class Controlador implements ActionListener, ListSelectionListener {
         vista.btnMostrarDetallesClientes.addActionListener(listener);
         vista.btnMostrarDetallesSuscripciones.addActionListener(listener);
         vista.btnMostrarDetallesClases.addActionListener(listener);
+        vista.btnVerClasesEntrenador.addActionListener(listener);
 
     }
 
@@ -337,6 +338,19 @@ public class Controlador implements ActionListener, ListSelectionListener {
                     JOptionPane.showMessageDialog(vista.frame, "Nombre: " + entrenadorSeleccionado.getNombre() + "\nEspecialidad: " + entrenadorSeleccionado.getEspecialidad() + "\nHorario: " + entrenadorSeleccionado.getHorario(), "Detalles del entrenador", JOptionPane.INFORMATION_MESSAGE);
                 }
                 break;
+            case "verClasesEntrenador":
+                entrenadorSeleccionado = (Entrenador) vista.listEntrenadores.getSelectedValue();
+                if (entrenadorSeleccionado != null) {
+                    clases = modelo.obtenerClasePorEntrenadorListado(entrenadorSeleccionado);
+                    vista.txtAreaEntrenadorVerClase.setText("");
+                    for (Clase clase : clases) {
+                        vista.txtAreaEntrenadorVerClase.append("ID: " + clase.getId() + "\n");
+                        vista.txtAreaEntrenadorVerClase.append("Nombre: " + clase.getNombre() + "\n");
+                        vista.txtAreaEntrenadorVerClase.append("\n");
+                    }
+                }
+                break;
+
 
         }
         limpiarCampos();

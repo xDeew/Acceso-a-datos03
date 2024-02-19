@@ -55,6 +55,8 @@ public class Vista extends JFrame {
     public JButton btnMostrarDetallesClientes;
     public JButton btnMostrarDetallesSuscripciones;
     public JButton btnMostrarDetallesClases;
+    public JButton btnVerClasesEntrenador;
+    public JTextArea txtAreaEntrenadorVerClase;
     public DefaultListModel dlmClientes;
     public DefaultListModel dlmSuscripciones;
     public DefaultListModel dlmEntrenadores;
